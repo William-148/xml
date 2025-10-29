@@ -1,0 +1,100 @@
+{% extends 'principal/base.html' %}
+{% load static %}
+
+{% block title %}Configuración del Sistema{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2>Enviar mensaje de configuración (.xml)</h2>
+
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="archivo_xml" class="form-label">Selecciona archivo XML:</label>
+          <input type="file" name="archivo" id="archivo_xml" accept=".xml" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+
+        <!-- Textarea para mostrar contenido del archivo -->
+        <div class="mb-3">
+          <label for="contenido_xml" class="form-label">Contenido del archivo:</label>
+          <textarea id="contenido_xml" class="form-control" rows="20" readonly></textarea>
+        </div>
+
+      </form>
+
+
+{% if resultado %}
+<div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="resultadoModalLabel">Resultado del procesamiento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li class="list-group-item">Recursos creados: {{ resultado.recursos_creados }}</li>
+          <li class="list-group-item">Categorías creadas: {{ resultado.categorias_creadas }}</li>
+          <li class="list-group-item">Configuraciones creadas: {{ resultado.configuraciones_creadas }}</li>
+          <li class="list-group-item">Clientes creados: {{ resultado.clientes_creados }}</li>
+          <li class="list-group-item">Instancias creadas: {{ resultado.instancias_creadas }}</li>
+        </ul>
+        {% if resultado.error %}
+          <div class="mt-3">
+            <h6 class="text-danger">Errores encontrados:</h6>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-danger">{{ resultado.error }}</li>
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if resultado.errors %}
+          <div class="mt-3">
+            <h6 class="text-danger">Errores encontrados:</h6>
+            <ul class="list-group">
+              {% for error in resultado.errors %}
+                <li class="list-group-item list-group-item-danger">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = new bootstrap.Modal(document.getElementById('resultadoModal'));
+    modal.show();
+  });
+</script>
+{% endif %}
+
+</div>
+</div>
+</div>
+
+<script>
+  document.getElementById('archivo_xml').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/xml') {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('contenido_xml').value = e.target.result;
+      };
+      reader.readAsText(file);
+    } else {
+      document.getElementById('contenido_xml').value = 'Archivo no válido. Selecciona un archivo .xml.';
+    }
+  });
+</script>
+{% endblock %}
+
+

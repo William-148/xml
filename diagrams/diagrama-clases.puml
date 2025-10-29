@@ -1,0 +1,144 @@
+@startuml
+' Tema simple
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+class Categoria {
+  - id: int
+  - nombre: str
+  - descripcion: str
+  - cargaTrabajo: str
+  - configuraciones: List<Configuracion>
+  --
+  + to_xml_element(): ET.Element
+  + from_element(ET.Element): Categoria
+  + write_xml(List<Categoria>): void
+}
+
+class Configuracion {
+  - id: int
+  - nombre: str
+  - descripcion: str
+  - recursos: Dict<int, float>
+  --
+  + to_xml_element(): ET.Element
+  + from_element(ET.Element): Configuracion
+}
+
+class Recurso {
+  - id: int
+  - nombre: str
+  - abreviatura: str
+  - metrica: str
+  - tipo: str
+  - valorXhora: float
+  --
+  + to_xml_element(): ET.Element
+  + from_element(ET.Element): Recurso
+  + write_xml(List<Recurso>): void
+  + get_dict_recursos(): Dict<int, Recurso>
+}
+
+class Cliente {
+  - nit: str
+  - nombre: str
+  - usuario: str
+  - clave: str
+  - direccion: str
+  - correoElectronico: str
+  - instancias: List<Instancia>
+  --
+  + to_xml_element(): ET.Element
+  + from_element(ET.Element): (Cliente, Optional[str])
+  + write_xml(List<Cliente>): void
+  + get_by_nit(nit): Cliente
+}
+
+class Instancia {
+  - id: int
+  - idConfiguracion: int
+  - nombre: str
+  - fechaInicio: Fecha
+  - estado: str
+  - fechaFinal: Fecha?
+  --
+  + to_xml_element(): ET.Element
+  + from_element(ET.Element): Instancia
+  + check_state(): void
+}
+
+class GrupoConsumos {
+  - nitCliente: str
+  - idInstancia: int
+  - consumos: List<Consumo>
+  --
+  + to_xml_element(): ET.Element
+  + write_xml(List<GrupoConsumos>): void
+  + append_xml(List<GrupoConsumos>): void
+  + load_all(): List<GrupoConsumos>
+}
+
+class Consumo {
+  - tiempo: float
+  - fechaHora: FechaHora
+  - facturado: bool
+  --
+  + to_xml_element(): ET.Element
+  + from_xml_element(ET.Element): Consumo
+}
+
+class Fecha {
+  - valor: str
+  --
+  + __str__(): str
+  + extraer_fecha(text: str): str
+}
+
+class FechaHora {
+  - valor: str
+  --
+  + __str__(): str
+  + extraer_fecha_hora(text: str): str
+}
+
+class Factura {
+  - id: int
+  - nitCliente: str
+  - fechaEmision: datetime
+  - rango_inicio: str
+  - rango_fin: str
+  - detalles: List<DetalleFactura>
+  - total: float
+  --
+  + generar(...): Factura
+  + to_xml_element(): ET.Element
+  + write_xml(List<Factura>, Path): void
+  + get_by_id(id): Factura
+}
+
+class DetalleFactura {
+  - idInstancia: int
+  - horas: float
+  - subtotal: float
+  - consumos: List<Consumo>
+  - recursos_cantidad: Dict<int,float>
+  --
+  + to_xml_element(): ET.Element
+}
+
+
+' Relaciones / cardinalidades
+Configururacion "1" -- "0..*" Recurso : usa (map: recurso_id -> cantidad)
+Categoria "1" -- "0..*" Configuracion : contiene >
+Cliente "1" -- "0..*" Instancia : posee >
+Instancia "1" -- "0..*" Consumo : registra >
+GrupoConsumos "1" -- "0..*" Consumo : agrega >
+Factura "1" -- "0..*" DetalleFactura : contiene >
+DetalleFactura "1" -- "0..*" Consumo : tiene (historial)
+DetalleFactura "1" -- "0..*" Recurso : referencia recursos (cantidad)
+Cliente ..> Fecha : usa
+Instancia ..> FechaHora : usa
+Consumo ..> FechaHora : usa
+
+
+@enduml

@@ -1,0 +1,109 @@
+{% extends 'principal/base.html' %}
+{% block title %}Consulta de Datos del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Consulta de Datos del Sistema</h2>
+
+  <!-- Categorías -->
+  <h4 class="mt-4">Categorías</h4>
+  {% for cat_id, categoria in datos.categorias.items %}
+    <div class="card mb-3">
+      <div class="card-header">
+        {{ categoria.nombre }} (Carga: {{ categoria.cargaTrabajo }})
+      </div>
+      <div class="card-body">
+        <p>{{ categoria.descripcion }}</p>
+        <h6>Configuraciones:</h6>
+        <ul>
+          {% for config in categoria.configuraciones %}
+            <li>
+              <strong>{{ config.nombre }}</strong>: {{ config.descripcion }}
+              <br>Recursos:
+              <ul>
+                {% for recurso_id, cantidad in config.recursos.items %}
+                  <li>ID {{ recurso_id }} → {{ cantidad }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Clientes -->
+  <h4 class="mt-4">Clientes</h4>
+  {% for cliente in datos.clientes %}
+    <div class="card mb-3">
+      <div class="card-header">
+        {{ cliente.nombre }} (NIT: {{ cliente.nit }})
+      </div>
+      <div class="card-body">
+        <p>Usuario: {{ cliente.usuario }} | Email: {{ cliente.correoElectronico }}</p>
+        <p>Dirección: {{ cliente.direccion }}</p>
+        <h6>Instancias:</h6>
+        <ul>
+          {% for instancia in cliente.instancias %}
+            <li>
+              <strong>{{ instancia.nombre }}</strong> (Estado: {{ instancia.estado }}, Configuración ID: {{ instancia.idConfiguracion }})
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Recursos -->
+  <h4 class="mt-4">Recursos</h4>
+  <div class="row">
+    {% for recurso_id, recurso in datos.recursos.items %}
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5>{{ recurso.nombre }} ({{ recurso.abreviatura }})</h5>
+            <p>Tipo: {{ recurso.tipo }} | Métrica: {{ recurso.metrica }}</p>
+            <p>Valor por hora: Q{{ recurso.valorXhora }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Facturas -->
+  <h4 class="mt-4">Facturas</h4>
+  {% for factura in datos.facturas %}
+    <div class="card mb-3">
+      <div class="card-header">
+        Factura #{{ factura.id }} – Cliente NIT: {{ factura.nitCliente }}
+      </div>
+      <div class="card-body">
+        <p>Fecha de emisión: {{ factura.fechaEmision }} | Rango desde: {{ factura.rango_inicio }}</p>
+        <p>Total: Q{{ factura.total }}</p>
+        <h6>Detalles:</h6>
+        <ul>
+          {% for detalle in factura.detalles %}
+            <li>
+              Instancia ID: {{ detalle.idInstancia }} – Subtotal: Q{{ detalle.subtotal }}
+              <br>Recursos:
+              <ul>
+                {% for recurso_id, cantidad in detalle.recursos_cantidad.items %}
+                  <li>ID {{ recurso_id }} → {{ cantidad }}</li>
+                {% endfor %}
+              </ul>
+              <br>Consumos:
+              <ul>
+                {% for consumo in detalle.consumos %}
+                  <li>{{ consumo.fechaHora }} → {{ consumo.tiempo }} horas</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+

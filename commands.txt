@@ -1,0 +1,12 @@
+# Cargar entorno virtual de python
+## linux
+source venv/bin/activate
+
+## windows
+.\env\Scripts\activate
+
+# Iniciar proyecto de django
+posicionarse en la carpeta donde se desea crear el proyecto
+
+python manage.py runserver
+

@@ -1,0 +1,36 @@
+{% extends 'principal/base.html' %}
+{% block title %}Consulta de Datos del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Categorías del Sistema</h2>
+
+  <!-- Categorías -->
+  {% for cat_id, categoria in datos.categorias.items %}
+    <div class="card mb-3">
+      <div class="card-header">
+        {{ categoria.nombre }} (Carga: {{ categoria.cargaTrabajo }})
+      </div>
+      <div class="card-body">
+        <p>{{ categoria.descripcion }}</p>
+        <h6>Configuraciones:</h6>
+        <ul>
+          {% for config in categoria.configuraciones %}
+            <li>
+              <strong>{{ config.nombre }}</strong>: {{ config.descripcion }}
+              <br>Recursos:
+              <ul>
+                {% for recurso_id, cantidad in config.recursos.items %}
+                  <li>ID {{ recurso_id }} → {{ cantidad }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+</div>
+{% endblock %}
+

@@ -1,0 +1,21 @@
+{% extends 'principal/base.html' %}
+{% load static %}
+
+{% block title %}Configuración del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Enviar mensaje de configuración (.xml)</h2>
+
+  <!-- Formulario para subir archivo XML -->
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="archivo_xml" class="form-label">Selecciona archivo XML:</label>
+      <input type="file" name="archivo_xml" id="archivo_xml" accept=".xml" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+{% endblock %}
+

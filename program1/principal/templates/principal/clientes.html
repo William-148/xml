@@ -1,0 +1,30 @@
+{% extends 'principal/base.html' %}
+{% block title %}Consulta de Datos del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Clientes del Sistema</h2>
+  {% for cliente in datos.clientes %}
+    <div class="card mb-3">
+      <div class="card-header">
+        {{ cliente.nombre }} (NIT: {{ cliente.nit }})
+      </div>
+      <div class="card-body">
+        <p>Usuario: {{ cliente.usuario }} | Email: {{ cliente.correoElectronico }}</p>
+        <p>Dirección: {{ cliente.direccion }}</p>
+        <h6>Instancias:</h6>
+        <ul>
+          {% for instancia in cliente.instancias %}
+            <li>
+              <strong>{{ instancia.nombre }}</strong> (Estado: {{ instancia.estado }}, Configuración ID: {{ instancia.idConfiguracion }})
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+</div>
+{% endblock %}
+
+

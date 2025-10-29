@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listaRecursos>
+  <recurso id="1">
+    <nombre>Memoria de acceso aleatorio</nombre>
+    <abreviatura>RAM</abreviatura>
+    <metrica>Gb</metrica>
+    <tipo>Hardware</tipo>
+    <valorXhora>40.0</valorXhora>
+  </recurso>
+  <recurso id="2">
+    <nombre>Unidad central de procesamiento</nombre>
+    <abreviatura>CPU</abreviatura>
+    <metrica>Núcleos</metrica>
+    <tipo>Hardware</tipo>
+    <valorXhora>55.0</valorXhora>
+  </recurso>
+  <recurso id="3">
+    <nombre>Disco duro sólido</nombre>
+    <abreviatura>SSD</abreviatura>
+    <metrica>Gb</metrica>
+    <tipo>Hardware</tipo>
+    <valorXhora>25.0</valorXhora>
+  </recurso>
+  <recurso id="4">
+    <nombre>Teclado</nombre>
+    <abreviatura>TCL</abreviatura>
+    <metrica>Unidad</metrica>
+    <tipo>Hardware</tipo>
+    <valorXhora>60.0</valorXhora>
+  </recurso>
+  <recurso id="5">
+    <nombre>Recurso 5</nombre>
+    <abreviatura>R5</abreviatura>
+    <metrica>Licencia</metrica>
+    <tipo>Software</tipo>
+    <valorXhora>82.5</valorXhora>
+  </recurso>
+</listaRecursos>

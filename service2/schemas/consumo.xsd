@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="listadoConsumos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="consumo" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="tiempo" type="xs:decimal"/>
+              <xs:element name="fechaHora" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="nitCliente" type="xs:string" use="required"/>
+            <xs:attribute name="idInstancia" type="xs:integer" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+

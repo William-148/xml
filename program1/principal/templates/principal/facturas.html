@@ -1,0 +1,49 @@
+{% extends 'principal/base.html' %}
+{% block title %}Consulta de Datos del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Facturas del Sistema</h2>
+
+<!-- Facturas -->
+{% for factura in datos.facturas %}
+  <div class="card mb-3">
+    <div class="card-header">
+      Factura #{{ factura.id }} – Cliente NIT: {{ factura.nitCliente }}
+    </div>
+    <div class="card-body">
+      <p>Fecha de emisión: {{ factura.fechaEmision }} | Rango desde: {{ factura.rango_inicio }}</p>
+      <p>Total: Q{{ factura.total }}</p>
+      <h6>Detalles:</h6>
+      <ul>
+        {% for detalle in factura.detalles %}
+          <li>
+            Instancia ID: {{ detalle.idInstancia }} – Horas: {{ detalle.horas }} - Subtotal: Q{{ detalle.subtotal }}
+            <br>Recursos:
+            <ul>
+              {% for recurso_id, cantidad in detalle.recursos_cantidad.items %}
+                <li>ID {{ recurso_id }} → {{ cantidad }}</li>
+              {% endfor %}
+            </ul>
+            <br>Consumos:
+            <ul>
+              {% for consumo in detalle.consumos %}
+                <li>{{ consumo.fechaHora }} → {{ consumo.tiempo }} horas</li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Botón para generar PDF -->
+      <a href="{{ factura_endpoint }}/{{ factura.id }}" class="btn btn-primary" target="_blank">
+        Generar PDF
+      </a>
+    </div>
+  </div>
+{% endfor %}
+
+</div>
+{% endblock %}
+
+

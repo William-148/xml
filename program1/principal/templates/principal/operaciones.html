@@ -1,0 +1,157 @@
+{% extends 'principal/base.html' %}
+{% block title %}Operaciones del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Operaciones del Sistema</h2>
+
+  <div class="row g-4">
+    <!-- Inicializar sistema -->
+    <div class="col-md-6">
+      <div class="card border-danger">
+        <div class="card-body">
+          <h5 class="card-title text-danger">Inicializar sistema</h5>
+          <p class="card-text">Esta operación eliminará todos los datos en la base de datos para iniciar una prueba sin datos previos.</p>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalInicializar">
+            Inicializar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consultar datos -->
+    <div class="col-md-6">
+      <div class="card border-info">
+        <div class="card-body">
+          <h5 class="card-title text-info">Consultar Datos</h5>
+          <p class="card-text">Visualiza la estructura actual del sistema.</p>
+          <div class="container mt-4">
+            <div class="btn-group" role="group" aria-label="Opciones del sistema">
+              <a href="{% url 'recursos' %}" class="btn btn-secondary text-decoration-none" >Recursos</a>
+              <a href="{% url 'categorias' %}" class="btn btn-secondary text-decoration-none" >Categorías</a>
+              <a href="{% url 'clientes' %}" class="btn btn-secondary text-decoration-none" >Clientes</a>
+              <a href="{% url 'facturas' %}" class="btn btn-secondary text-decoration-none" >Facturas</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Proceso de facturación -->
+    <div class="col-md-6">
+      <div class="card border-warning">
+        <div class="card-body">
+          <h5 class="card-title text-warning">Proceso de facturación</h5>
+          <p class="card-text">Genera facturas por recursos consumidos no facturados, seleccionando un rango de fechas.</p>
+          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalFacturacion">
+            Facturar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal fade" id="modalInicializar" tabindex="-1" aria-labelledby="modalInicializarLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="POST" action="{% url 'inicializar_sistema' %}">
+            {% csrf_token %}
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="modalInicializarLabel">¿Estás seguro?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              Esta acción eliminará todos los datos del sistema. ¿Deseas continuar?
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger">Sí, inicializar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal de Facturación -->
+    <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="POST" action="{% url 'facturacion' %}">
+            {% csrf_token %}
+            <div class="modal-header bg-warning text-dark">
+              <h5 class="modal-title" id="modalFacturacionLabel">Seleccionar rango de fechas</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+              </div>
+              <div class="mb-3">
+                <label for="fecha_fin" class="form-label">Fecha de fin</label>
+                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-warning">Generar Facturas</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% if resultado %}
+<div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="resultadoModalLabel">Resultado del procesamiento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li class="list-group-item">Facturas generadas: {{ resultado.facturas_generadas }}</li>
+        </ul>
+        {% if resultado.error %}
+          <div class="mt-3">
+            <h6 class="text-danger">Errores encontrados:</h6>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-danger">{{ resultado.error }}</li>
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if resultado.errors %}
+          <div class="mt-3">
+            <h6 class="text-danger">Errores encontrados:</h6>
+            <ul class="list-group">
+              {% for error in resultado.errors %}
+                <li class="list-group-item list-group-item-danger">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = new bootstrap.Modal(document.getElementById('resultadoModal'));
+    modal.show();
+  });
+</script>
+{% endif %}
+
+
+  </div>
+</div>
+{% endblock %}

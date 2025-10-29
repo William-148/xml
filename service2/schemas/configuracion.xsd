@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="archivoConfiguraciones">
+    <xs:complexType>
+      <xs:sequence>
+
+        <xs:element name="listaRecursos" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="recurso" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="nombre" type="xs:string"/>
+                    <xs:element name="abreviatura" type="xs:string"/>
+                    <xs:element name="metrica" type="xs:string"/>
+                    <xs:element name="tipo" type="xs:string"/>
+                    <xs:element name="valorXhora" type="xs:decimal"/>
+                  </xs:sequence>
+                  <xs:attribute name="id" type="xs:integer" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="listaCategorias" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="categoria" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="nombre" type="xs:string"/>
+                    <xs:element name="descripcion" type="xs:string"/>
+                    <xs:element name="cargaTrabajo" type="xs:string"/>
+
+                    <!-- Lista de configuraciones (dentro de categoria) -->
+                    <xs:element name="listaConfiguraciones" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="configuracion" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="nombre" type="xs:string"/>
+                                <xs:element name="descripcion" type="xs:string"/>
+
+                                <!-- Recursos dentro de Configuración -->
+                                <xs:element name="recursosConfiguracion" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="recurso" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:decimal">
+                                              <xs:attribute name="id" type="xs:integer" use="required"/>
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+
+                              </xs:sequence>
+                              <xs:attribute name="id" type="xs:integer" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+
+                  </xs:sequence>
+                  <xs:attribute name="id" type="xs:integer" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- ===== Lista de Clientes ===== -->
+        <xs:element name="listaClientes" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="cliente" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="nombre" type="xs:string"/>
+                    <xs:element name="usuario" type="xs:string" minOccurs="0"/>
+                    <xs:element name="clave" type="xs:string" minOccurs="0"/>
+                    <xs:element name="direccion" type="xs:string"/>
+                    <xs:element name="correoElectronico" type="xs:string"/>
+
+                    <xs:element name="listaInstancias" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="instancia" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="idConfiguracion" type="xs:integer"/>
+                                <xs:element name="nombre" type="xs:string"/>
+                                <xs:element name="fechaInicio" type="xs:string"/>
+                                <xs:element name="estado" type="xs:string"/>
+                                <xs:element name="fechaFinal" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                              <xs:attribute name="id" type="xs:integer" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="nit" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

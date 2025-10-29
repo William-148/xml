@@ -1,0 +1,25 @@
+{% extends 'principal/base.html' %}
+{% block title %}Consulta de Datos del Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Recursos del Sistema</h2>
+
+  <!-- Recursos -->
+  <div class="row">
+    {% for recurso_id, recurso in datos.recursos.items %}
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5>{{ recurso.nombre }} ({{ recurso.abreviatura }})</h5>
+            <p>Tipo: {{ recurso.tipo }} | Métrica: {{ recurso.metrica }}</p>
+            <p>Valor por hora: Q{{ recurso.valorXhora }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
+

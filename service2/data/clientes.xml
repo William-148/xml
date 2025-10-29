@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listaClientes>
+  <cliente nit="2019160-K">
+    <nombre>Nombre</nombre>
+    <usuario>Usuario</usuario>
+    <clave>claveUsuario</clave>
+    <direccion>Direccion del cliente</direccion>
+    <correoElectronico>eMailCliente</correoElectronico>
+    <listaInstancias>
+      <instancia id="1">
+        <idConfiguracion>1</idConfiguracion>
+        <nombre>Primera instancia</nombre>
+        <fechaInicio>26/02/2003</fechaInicio>
+        <estado>Vigente</estado>
+        <fechaFinal> </fechaFinal>
+      </instancia>
+      <instancia id="2">
+        <idConfiguracion>2</idConfiguracion>
+        <nombre>Segunda instancia</nombre>
+        <fechaInicio>26/02/2003</fechaInicio>
+        <estado>Cancelada</estado>
+        <fechaFinal>27/06/2009</fechaFinal>
+      </instancia>
+    </listaInstancias>
+  </cliente>
+</listaClientes>
