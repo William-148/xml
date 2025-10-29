@@ -31,6 +31,17 @@ class Instancia:
         if self.estado == "Vigente":
             self.fechaFinal = None
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "idConfiguracion": self.idConfiguracion,
+            "nombre": self.nombre,
+            "fechaInicio": str(self.fechaInicio),
+            "estado": self.estado,
+            "fechaFinal": str(self.fechaFinal) if self.fechaFinal else None,
+        }
+
+
     def to_xml_element(self) -> ET.Element:
         el = ET.Element("instancia", {"id": str(self.id)})
         ET.SubElement(el, "idConfiguracion").text = str(self.idConfiguracion)

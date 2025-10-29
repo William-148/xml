@@ -14,6 +14,14 @@ class DetalleFactura:
     recursos_cantidad: Dict[int, float] = field(default_factory=dict)
     consumos: List[ConsumoFactura] = field(default_factory=list)
 
+    def to_dict(self) -> dict:
+        return {
+            "idInstancia": self.idInstancia,
+            "horas": self.horas,
+            "subtotal": self.subtotal,
+            "recursos": self.recursos_cantidad,
+            "consumos": [consumo.to_dict() for consumo in self.consumos]
+        }
 
     def to_xml_element(self) -> ET.Element:
         """
@@ -87,6 +95,12 @@ class ConsumoFactura:
             "tiempo": f"{self.tiempo:.2f}",
             "fechaHora": self.fechaHora
         })
+
+    def to_dict(self) -> dict:
+        return {
+            "tiempo": self.tiempo,
+            "fechaHora": self.fechaHora
+        }
 
     @staticmethod
     def from_element(element: ET.Element) -> ConsumoFactura:

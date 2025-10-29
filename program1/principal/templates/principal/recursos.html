@@ -5,20 +5,43 @@
 <div class="container mt-4">
   <h2>Recursos del Sistema</h2>
 
-  <!-- Recursos -->
-  <div class="row">
-    {% for recurso_id, recurso in datos.recursos.items %}
-      <div class="col-md-6">
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5>{{ recurso.nombre }} ({{ recurso.abreviatura }})</h5>
-            <p>Tipo: {{ recurso.tipo }} | Métrica: {{ recurso.metrica }}</p>
-            <p>Valor por hora: Q{{ recurso.valorXhora }}</p>
+<!-- Recursos -->
+<div class="row">
+  {% for recurso in datos.recursos %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card shadow-sm h-100 border-0">
+        <div class="card-body">
+
+          <!-- Encabezado -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0 text-primary fw-semibold">
+              {% if recurso.tipo == "Hardware" %}
+                <i class="bi bi-cpu-fill me-1"></i>
+              {% else %}
+                <i class="bi bi-code-slash me-1"></i>
+              {% endif %}
+              {{ recurso.nombre }}
+            </h5>
+            <span class="badge bg-secondary">{{ recurso.abreviatura }}</span>
           </div>
+
+          <!-- Detalles -->
+          <ul class="list-unstyled mb-3">
+            <li><small class="text-muted">Tipo:</small> <span class="fw-semibold">{{ recurso.tipo }}</span></li>
+            <li><small class="text-muted">Métrica:</small> <span class="fw-semibold">{{ recurso.metrica }}</span></li>
+          </ul>
+
+          <!-- Precio -->
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-bold fs-6 text-dark">Q{{ recurso.valorXhora }}</span>
+            <span class="text-muted small">por hora</span>
+          </div>
+
         </div>
       </div>
-    {% endfor %}
-  </div>
+    </div>
+  {% endfor %}
+</div>
 
 </div>
 {% endblock %}

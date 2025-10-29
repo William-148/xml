@@ -27,6 +27,19 @@ class Cliente:
         if not re.match(patron, self.nit):
             raise ValidationError(f"NIT inválido '{self.nit}'.")
 
+    def to_dict(self) -> Dict:
+        """
+            Convierte el objeto Cliente a un diccionario. Sin incluir las instancias.
+        """
+        return {
+            "nit": self.nit,
+            "nombre": self.nombre,
+            "usuario": self.usuario,
+            "clave": self.clave,
+            "direccion": self.direccion,
+            "correoElectronico": self.correoElectronico,
+        }
+
 
     def to_xml_element(self) -> ET.Element:
         el = ET.Element("cliente", {"nit": self.nit})
@@ -84,6 +97,16 @@ class Cliente:
         for cli_el in root.findall("cliente"):
             cli, _ = Cliente.from_element(cli_el)
             clientes.append(cli)
+        return clientes
+
+    @staticmethod
+    def get_all_dict() -> Dict[str, Cliente]:
+        tree = ET.parse("data/clientes.xml")
+        root = tree.getroot()
+        clientes = {}
+        for cli_el in root.findall("cliente"):
+            cli, _ = Cliente.from_element(cli_el)
+            clientes[cli.nit] = cli
         return clientes
 
     @staticmethod

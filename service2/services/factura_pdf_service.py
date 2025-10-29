@@ -11,11 +11,11 @@ from models.classes.cliente import Cliente
 from models.classes.instancia import Instancia
 
 from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.enums import TA_CENTER
+from datetime import datetime
 
 
 class FacturaPdfService:
@@ -38,66 +38,80 @@ class FacturaPdfService:
         self.cliente = cliente
         self.instancias_dict = instancias_dict
 
-
     def generar_pdf(self):
-        # Nombre de archivo
         file_path = f"{self.base_path}/factura_{str(self.factura.id)}.pdf"
 
-        # Configuración
+        # Configuración base del documento
         doc = SimpleDocTemplate(
             file_path,
             pagesize=letter,
             title=f"Factura #{str(self.factura.id)}",
-            author="Tecnologías Chapinas S.A."
+            author="Tecnologías Chapinas S.A.",
+            rightMargin=50, leftMargin=50, topMargin=50, bottomMargin=40
         )
-        styles = getSampleStyleSheet()
-        elements = []
-        # Encabezado
-        title = Paragraph(
-            f"<b>Factura #{str(self.factura.id)}</b><br/>"
-            f"Tecnologías Chapinas S.A.",
-            styles["Title"]
-        )
-        elements.append(title)
-        elements.append(Spacer(1, 0.25 * inch))
-        # Datos generales
-        datos_cliente = f"""
-        <b>Cliente:</b> {self.cliente.nombre}<br/>
-        <b>NIT:</b> {self.cliente.nit}<br/>
-        <b>Dirección:</b> {self.cliente.direccion}<br/>
-        <b>Correo:</b> {self.cliente.correoElectronico}<br/>
-        <b>Fecha emisión:</b> {self.factura.fechaEmision}<br/>
-        <b>Rango inicio:</b> {self.factura.rango_inicio}<br/>
-        """
-        elements.append(Paragraph(datos_cliente, styles["Normal"]))
-        elements.append(Spacer(1, 0.25 * inch))
 
-        # Tabla de detalle de instancias
-        elements.append(Paragraph("<b>Detalle de Instancias</b>", styles["Heading2"]))
+        styles = getSampleStyleSheet()
+
+        # Estilos personalizados
+        styles.add(ParagraphStyle(name="Empresa", fontSize=14, textColor=colors.HexColor("#003366"), alignment=1, leading=16))
+        styles.add(ParagraphStyle(name="Factura", fontSize=12, textColor=colors.gray, alignment=1))
+        styles.add(ParagraphStyle(name="Subtitulo", fontSize=11, textColor=colors.HexColor("#003366"), leading=14, spaceAfter=6))
+        styles.add(ParagraphStyle(name="Campo", fontSize=10, textColor=colors.black, leading=14))
+        styles.add(ParagraphStyle(name="Total", fontSize=12, textColor=colors.HexColor("#003366"), leading=14))
+        styles.add(ParagraphStyle(name="Footer", fontSize=8, textColor=colors.gray, alignment=2))
+
+        elements = []
+
+        # Encabezado elegante
+        elements.append(Paragraph("Tecnologías Chapinas S.A.", styles["Empresa"]))
+        elements.append(Paragraph(f"Factura #{str(self.factura.id)}", styles["Factura"]))
+        elements.append(HRFlowable(width="100%", color=colors.HexColor("#003366"), thickness=1, spaceBefore=8, spaceAfter=12))
+
+        # Datos del cliente
+        datos_cliente = f"""
+            <b>Cliente:</b> {self.cliente.nombre}<br/>
+            <b>NIT:</b> {self.cliente.nit}<br/>
+            <b>Dirección:</b> {self.cliente.direccion}<br/>
+            <b>Correo:</b> {self.cliente.correoElectronico}<br/>
+            <b>Fecha de emisión:</b> {self.factura.fechaEmision}<br/>
+            <b>Rango de inicio:</b> {self.factura.rango_inicio}<br/>
+        """
+        elements.append(Paragraph("<b>Datos del Cliente</b>", styles["Subtitulo"]))
+        elements.append(Paragraph(datos_cliente, styles["Campo"]))
+        elements.append(Spacer(1, 0.15 * inch))
+
+        # Detalle de instancias
+        elements.append(HRFlowable(width="100%", color=colors.HexColor("#003366"), thickness=0.5, spaceBefore=6, spaceAfter=8))
+        elements.append(Paragraph("<b>Detalle de Instancias</b>", styles["Subtitulo"]))
+
         for detalle in self.factura.detalles:
-            inst = self.instancias_dict[detalle.idInstancia]
-            if inst is not None:
-                elements.append(Paragraph(f"<b>Instancia:</b> {inst.nombre} (ID {str(inst.id)})", styles["Normal"]))
-                elements.append(Paragraph(f"<b>Horas facturadas:</b> {detalle.horas:.2f}", styles["Normal"]))
-                elements.append(Paragraph(f"<b>Subtotal:</b> Q{detalle.subtotal:.2f}", styles["Normal"]))
+            inst = self.instancias_dict.get(detalle.idInstancia)
+            if inst:
+                elements.append(Paragraph(f"<b>Instancia:</b> {inst.nombre} (ID {inst.id})", styles["Campo"]))
+                elements.append(Paragraph(f"<b>Horas facturadas:</b> {detalle.horas:.2f}", styles["Campo"]))
+                elements.append(Paragraph(f"<b>Subtotal:</b> Q{detalle.subtotal:.2f}", styles["Campo"]))
                 elements.append(Spacer(1, 0.1 * inch))
 
             # Tabla de consumos
-            elements.append(Paragraph("<b>Consumos:</b>", styles["Normal"]))
+            elements.append(Paragraph("Consumos", styles["Subtitulo"]))
             data_consumos = [["Fecha/Hora", "Tiempo (h)"]]
             for c in detalle.consumos:
-                data_consumos.append([str(c.fechaHora), f"{c.tiempo:.2f}"])
-            tabla_consumos = Table(data_consumos, colWidths=[3*inch, 1.5*inch])
+                data_consumos.append([c.fechaHora, f"{c.tiempo:.2f}"])
+
+            tabla_consumos = Table(data_consumos, colWidths=[3 * inch, 1.5 * inch])
             tabla_consumos.setStyle(TableStyle([
                 ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#003366")),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 0.5, colors.gray),
+                ("GRID", (0, 0), (-1, -1), 0.25, colors.gray),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.whitesmoke, colors.lightgrey]),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
             ]))
             elements.append(tabla_consumos)
             elements.append(Spacer(1, 0.15 * inch))
-            # Tabla de recursos de la configuración
-            elements.append(Paragraph("<b>Recursos asociados:</b>", styles["Normal"]))
+
+            # Tabla de recursos
+            elements.append(Paragraph("Recursos Asociados", styles["Subtitulo"]))
             data_recursos = [["Recurso", "Cantidad", "Precio/Hora", "Aporte (Q)"]]
             for rid, cantidad in detalle.recursos_cantidad.items():
                 recurso = self.recursos[rid]
@@ -111,23 +125,28 @@ class FacturaPdfService:
                     f"Q{precio:.2f}",
                     f"Q{aporte:.2f}"
                 ])
-            tabla_recursos = Table(data_recursos, colWidths=[3*inch, 1*inch, 1.5*inch, 1.5*inch])
+
+            tabla_recursos = Table(data_recursos, colWidths=[3 * inch, 1 * inch, 1.2 * inch, 1.2 * inch])
             tabla_recursos.setStyle(TableStyle([
                 ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#003366")),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 0.5, colors.gray),
+                ("GRID", (0, 0), (-1, -1), 0.25, colors.gray),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.whitesmoke, colors.lightgrey]),
                 ("ALIGN", (1, 1), (-1, -1), "CENTER"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
             ]))
             elements.append(tabla_recursos)
-            elements.append(Spacer(1, 0.25 * inch))
+            elements.append(Spacer(1, 0.3 * inch))
 
-        # Total general
-        elements.append(Paragraph(f"<b>Total a pagar:</b> Q{self.factura.total:.2f}", styles["Heading2"]))
-        elements.append(Spacer(1, 0.25 * inch))
+        # Total
+        elements.append(HRFlowable(width="100%", color=colors.HexColor("#003366"), thickness=1, spaceBefore=6, spaceAfter=8))
+        elements.append(Paragraph(f"<b>Total a pagar:</b> Q{self.factura.total:.2f}", styles["Total"]))
+        elements.append(Spacer(1, 0.3 * inch))
+
+        # Pie de página
         fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
-        elements.append(Paragraph(f"<font size=8>Generado el {fecha_actual}</font>", styles["Normal"]))
+        elements.append(Paragraph(f"Generado el {fecha_actual}", styles["Footer"]))
 
-        # Generar PDF
         doc.build(elements)
         return file_path
 

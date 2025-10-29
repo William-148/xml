@@ -2,156 +2,191 @@
 {% block title %}Operaciones del Sistema{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4">Operaciones del Sistema</h2>
+<div class="container py-4">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary mb-2">
+      <i class="bi bi-gear-fill me-2"></i>Operaciones del Sistema
+    </h2>
+    <p class="text-muted">Administra y ejecuta las operaciones principales del sistema.</p>
+  </div>
 
   <div class="row g-4">
     <!-- Inicializar sistema -->
-    <div class="col-md-6">
-      <div class="card border-danger">
+    <div class="col-md-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title text-danger">Inicializar sistema</h5>
-          <p class="card-text">Esta operación eliminará todos los datos en la base de datos para iniciar una prueba sin datos previos.</p>
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalInicializar">
-            Inicializar
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-danger bg-opacity-10 rounded-circle p-3 me-3">
+              <i class="bi bi-exclamation-triangle-fill text-danger fs-3"></i>
+            </div>
+            <h5 class="card-title text-danger fw-semibold mb-0">Inicializar sistema</h5>
+          </div>
+          <p class="card-text text-muted">
+            Esta operación eliminará todos los datos de la base de datos para comenzar desde cero.
+          </p>
+          <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalInicializar">
+            <i class="bi bi-trash3 me-2"></i>Inicializar
           </button>
         </div>
       </div>
     </div>
 
     <!-- Consultar datos -->
-    <div class="col-md-6">
-      <div class="card border-info">
+    <div class="col-md-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title text-info">Consultar Datos</h5>
-          <p class="card-text">Visualiza la estructura actual del sistema.</p>
-          <div class="container mt-4">
-            <div class="btn-group" role="group" aria-label="Opciones del sistema">
-              <a href="{% url 'recursos' %}" class="btn btn-secondary text-decoration-none" >Recursos</a>
-              <a href="{% url 'categorias' %}" class="btn btn-secondary text-decoration-none" >Categorías</a>
-              <a href="{% url 'clientes' %}" class="btn btn-secondary text-decoration-none" >Clientes</a>
-              <a href="{% url 'facturas' %}" class="btn btn-secondary text-decoration-none" >Facturas</a>
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-info bg-opacity-10 rounded-circle p-3 me-3">
+              <i class="bi bi-database-fill-gear text-info fs-3"></i>
             </div>
+            <h5 class="card-title text-info fw-semibold mb-0">Consultar Datos</h5>
           </div>
+          <p class="card-text text-muted">Explora la estructura actual del sistema.</p>
 
+          <div class="d-grid gap-2">
+            <a href="{% url 'recursos' %}" class="btn btn-outline-secondary">
+              <i class="bi bi-memory me-1"></i>Recursos
+            </a>
+            <a href="{% url 'categorias' %}" class="btn btn-outline-secondary">
+              <i class="bi bi-grid-3x3-gap-fill me-1"></i>Categorías
+            </a>
+            <a href="{% url 'clientes' %}" class="btn btn-outline-secondary">
+              <i class="bi bi-people-fill me-1"></i>Clientes
+            </a>
+            <a href="{% url 'facturas' %}" class="btn btn-outline-secondary">
+              <i class="bi bi-receipt me-1"></i>Facturas
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
-
     <!-- Proceso de facturación -->
-    <div class="col-md-6">
-      <div class="card border-warning">
+    <div class="col-md-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title text-warning">Proceso de facturación</h5>
-          <p class="card-text">Genera facturas por recursos consumidos no facturados, seleccionando un rango de fechas.</p>
-          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalFacturacion">
-            Facturar
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+              <i class="bi bi-file-earmark-text-fill text-warning fs-3"></i>
+            </div>
+            <h5 class="card-title text-warning fw-semibold mb-0">Proceso de Facturación</h5>
+          </div>
+          <p class="card-text text-muted">
+            Genera facturas de recursos consumidos dentro de un rango de fechas.
+          </p>
+          <button type="button" class="btn btn-warning w-100 text-dark fw-semibold" data-bs-toggle="modal" data-bs-target="#modalFacturacion">
+            <i class="bi bi-cash-stack me-2"></i>Facturar
           </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal de confirmación -->
-    <div class="modal fade" id="modalInicializar" tabindex="-1" aria-labelledby="modalInicializarLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form method="POST" action="{% url 'inicializar_sistema' %}">
-            {% csrf_token %}
-            <div class="modal-header bg-danger text-white">
-              <h5 class="modal-title" id="modalInicializarLabel">¿Estás seguro?</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-              Esta acción eliminará todos los datos del sistema. ¿Deseas continuar?
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-danger">Sí, inicializar</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- Modal de Facturación -->
-    <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form method="POST" action="{% url 'facturacion' %}">
-            {% csrf_token %}
-            <div class="modal-header bg-warning text-dark">
-              <h5 class="modal-title" id="modalFacturacionLabel">Seleccionar rango de fechas</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
-                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-              </div>
-              <div class="mb-3">
-                <label for="fecha_fin" class="form-label">Fecha de fin</label>
-                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-warning">Generar Facturas</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    {% if resultado %}
-<div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title" id="resultadoModalLabel">Resultado del procesamiento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-group">
-          <li class="list-group-item">Facturas generadas: {{ resultado.facturas_generadas }}</li>
-        </ul>
-        {% if resultado.error %}
-          <div class="mt-3">
-            <h6 class="text-danger">Errores encontrados:</h6>
-            <ul class="list-group">
-                <li class="list-group-item list-group-item-danger">{{ resultado.error }}</li>
-            </ul>
+  <!-- Modal Inicializar -->
+  <div class="modal fade" id="modalInicializar" tabindex="-1" aria-labelledby="modalInicializarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'inicializar_sistema' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="modalInicializarLabel">¿Estás seguro?</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
-        {% endif %}
-
-        {% if resultado.errors %}
-          <div class="mt-3">
-            <h6 class="text-danger">Errores encontrados:</h6>
-            <ul class="list-group">
-              {% for error in resultado.errors %}
-                <li class="list-group-item list-group-item-danger">{{ error }}</li>
-              {% endfor %}
-            </ul>
+          <div class="modal-body">
+            Esta acción <strong>eliminará todos los datos</strong> del sistema. ¿Deseas continuar?
           </div>
-        {% endif %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-check2-circle me-1"></i>Sí, inicializar
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const modal = new bootstrap.Modal(document.getElementById('resultadoModal'));
-    modal.show();
-  });
-</script>
-{% endif %}
-
-
+  <!-- Modal Facturación -->
+  <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'facturacion' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title" id="modalFacturacionLabel">Seleccionar rango de fechas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+              <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+            </div>
+            <div class="mb-3">
+              <label for="fecha_fin" class="form-label">Fecha de fin</label>
+              <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-warning text-dark fw-semibold">
+              <i class="bi bi-file-earmark-plus me-1"></i>Generar Facturas
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
+
+  <!-- Modal Resultado -->
+  {% if resultado %}
+  <div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="resultadoModalLabel">
+            <i class="bi bi-check-circle-fill me-2"></i>Resultado del procesamiento
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>Facturas generadas</span>
+              <span class="badge bg-success rounded-pill">{{ resultado.facturas_generadas }}</span>
+            </li>
+          </ul>
+
+          {% if resultado.error %}
+            <div class="alert alert-danger mt-3 mb-0">
+              <i class="bi bi-exclamation-octagon-fill me-2"></i>{{ resultado.error }}
+            </div>
+          {% endif %}
+
+          {% if resultado.errors %}
+            <div class="mt-3">
+              <h6 class="text-danger fw-semibold">Errores encontrados:</h6>
+              <ul class="list-group">
+                {% for error in resultado.errors %}
+                  <li class="list-group-item list-group-item-danger">{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = new bootstrap.Modal(document.getElementById('resultadoModal'));
+      modal.show();
+    });
+  </script>
+  {% endif %}
 </div>
 {% endblock %}
+

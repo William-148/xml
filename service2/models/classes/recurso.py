@@ -18,6 +18,15 @@ class Recurso:
         if self.tipo not in ["Hardware", "Software"]:
             raise ValidationError(f"Tipo de recurso inválido '{self.tipo}'.")
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "abreviatura": self.abreviatura,
+            "metrica": self.metrica,
+            "tipo": self.tipo,
+            "valorXhora": self.valorXhora,
+        }
 
     def to_xml_element(self) -> ET.Element:
         el = ET.Element("recurso", {"id": str(self.id)})
@@ -27,6 +36,16 @@ class Recurso:
         ET.SubElement(el, "tipo").text = self.tipo
         ET.SubElement(el, "valorXhora").text = str(self.valorXhora)
         return el
+
+    @staticmethod
+    def get_all() -> List[Recurso]:
+        tree = ET.parse("data/recursos.xml")
+        root = tree.getroot()
+        recursos = []
+        for r in root.findall("recurso"):
+            rec = Recurso.from_element(r)
+            recursos.append(rec)
+        return recursos
 
     @staticmethod
     def get_dict_recursos() -> Dict[int, Recurso]:

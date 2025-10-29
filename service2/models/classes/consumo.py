@@ -87,8 +87,22 @@ class GrupoConsumos:
             grupos.append(grupo)
         return grupos
 
+    def get_all_dict() -> Dict[str, GrupoConsumos]:
+        tree = ET.parse("data/consumos.xml")
+        root = tree.getroot()
+        grupos = {}
+        for grupo_el in root.findall("grupoConsumos"):
+            nit = grupo_el.attrib["nitCliente"]
+            id_inst = int(grupo_el.attrib["idInstancia"])
+            grupo = GrupoConsumos(nitCliente=nit, idInstancia=id_inst)
+            for consumo_el in grupo_el.findall("consumo"):
+                grupo.consumos.append(Consumo.from_xml_element(consumo_el))
+            grupos[f"{grupo.nitCliente.lower()}-{str(grupo.idInstancia)}"] = grupo
+        return grupos
 
 
+
+@dataclass(init=False)
 class Consumo:
     tiempo: float
     fechaHora: FechaHora
@@ -98,6 +112,13 @@ class Consumo:
         self.tiempo = tiempo
         self.fechaHora = FechaHora(fechaHora)
         self.facturado = facturado
+
+    def to_dict(self) -> Dict[str, Optional[object]]:
+        return {
+            "tiempo": self.tiempo,
+            "fechaHora": str(self.fechaHora),
+            "facturado": self.facturado,
+        }
 
     def to_xml_element(self) -> ET.Element:
         """

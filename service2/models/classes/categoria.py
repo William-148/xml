@@ -22,14 +22,15 @@ class Categoria:
             lista_conf.append(c.to_xml_element())
         return el
 
-    def to_dict(self) -> Dict[str, Optional[object]]:
+    def to_dict(self, incluir_configuraciones: bool = True) -> Dict[str, Optional[object]]:
         return {
             "id": self.id,
             "nombre": self.nombre,
             "descripcion": self.descripcion,
             "cargaTrabajo": self.cargaTrabajo,
-            "configuraciones": [c.to_dict() for c in self.configuraciones]
+            "configuraciones": [c.to_dict() for c in self.configuraciones] if incluir_configuraciones else [],
         }
+
 
     @staticmethod
     def from_element(el: ET.Element) -> "Categoria":
@@ -61,6 +62,16 @@ class Categoria:
         tree = ET.ElementTree(root)
         ET.indent(tree, space="  ", level=0)
         tree.write("data/categorias.xml", encoding="utf-8", xml_declaration=True)
+
+    @staticmethod
+    def get_all() -> List[Categoria]:
+        tree = ET.parse("data/categorias.xml")
+        root = tree.getroot()
+        categorias = []
+        for cat_el in root.findall("categoria"):
+            cat = Categoria.from_element(cat_el)
+            categorias.append(cat)
+        return categorias
 
     @staticmethod
     def get_dict_categorias() -> Dict[int, Dict[str, Optional[object]]]:

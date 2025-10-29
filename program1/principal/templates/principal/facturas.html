@@ -7,42 +7,145 @@
 
 <!-- Facturas -->
 {% for factura in datos.facturas %}
-  <div class="card mb-3">
-    <div class="card-header">
-      Factura #{{ factura.id }} – Cliente NIT: {{ factura.nitCliente }}
+  <div class="card mb-4 shadow-sm border-0 rounded-3">
+    <!-- ENCABEZADO FACTURA -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="bi bi-receipt-cutoff me-2 text-warning"></i>
+        Factura #{{ factura.id }}
+      </h5>
+      <small class="text-white-50">Emitida: {{ factura.fechaEmision }}</small>
     </div>
-    <div class="card-body">
-      <p>Fecha de emisión: {{ factura.fechaEmision }} | Rango desde: {{ factura.rango_inicio }}</p>
-      <p>Total: Q{{ factura.total }}</p>
-      <h6>Detalles:</h6>
-      <ul>
-        {% for detalle in factura.detalles %}
-          <li>
-            Instancia ID: {{ detalle.idInstancia }} – Horas: {{ detalle.horas }} - Subtotal: Q{{ detalle.subtotal }}
-            <br>Recursos:
-            <ul>
-              {% for recurso_id, cantidad in detalle.recursos_cantidad.items %}
-                <li>ID {{ recurso_id }} → {{ cantidad }}</li>
-              {% endfor %}
-            </ul>
-            <br>Consumos:
-            <ul>
-              {% for consumo in detalle.consumos %}
-                <li>{{ consumo.fechaHora }} → {{ consumo.tiempo }} horas</li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endfor %}
-      </ul>
 
-      <!-- Botón para generar PDF -->
-      <a href="{{ factura_endpoint }}/{{ factura.id }}" class="btn btn-primary" target="_blank">
-        Generar PDF
-      </a>
+    <!-- CUERPO PRINCIPAL -->
+    <div class="card-body bg-light">
+      <!-- CLIENTE -->
+      <div class="mb-3">
+        <h6 class="fw-bold text-secondary border-bottom pb-1 mb-2">
+          <i class="bi bi-person-circle me-1"></i> Cliente
+        </h6>
+        <p class="mb-1"><strong>Nombre:</strong> {{ factura.cliente.nombre }}</p>
+        <p class="mb-1"><strong>Usuario:</strong> {{ factura.cliente.usuario }}</p>
+        <p class="mb-1"><strong>Email:</strong> {{ factura.cliente.correoElectronico }}</p>
+        <p class="mb-1"><strong>Dirección:</strong> {{ factura.cliente.direccion }}</p>
+        <p class="mb-1"><strong>NIT:</strong> {{ factura.cliente.nit }}</p>
+      </div>
+
+      <!-- DATOS GENERALES -->
+      <div class="mb-3">
+        <h6 class="fw-bold text-secondary border-bottom pb-1 mb-2">
+          <i class="bi bi-info-circle me-1"></i> Información general
+        </h6>
+        <p class="mb-1">
+          <i class="bi bi-calendar-event me-1 text-primary"></i>
+          <strong>Fecha de emisión:</strong> {{ factura.fechaEmision }}
+        </p>
+        <p class="mb-1">
+          <i class="bi bi-arrow-right-circle me-1 text-primary"></i>
+          <strong>Rango desde:</strong> {{ factura.rango_inicio }}
+        </p>
+        <h6 class="fw-bold text-success mt-3">
+          <i class="bi bi-cash-coin me-1"></i> Total: Q{{ factura.total }}
+        </h6>
+      </div>
+
+      <!-- DETALLES -->
+      <h6 class="text-secondary fw-bold border-bottom pb-1 mb-3">
+        <i class="bi bi-list-ul me-1"></i> Detalles
+      </h6>
+
+      {% for detalle in factura.detalles %}
+        <div class="card mb-3 border-0 shadow-sm">
+          <div class="card-body">
+            <!-- Instancia -->
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="card-title mb-1 text-dark">
+                  <i class="bi bi-hdd-network me-1 text-primary"></i>
+                  Instancia: {{ detalle.instancia.nombre }}
+                  <span class="badge 
+                    {% if detalle.instancia.estado == 'Vigente' %}bg-success
+                    {% elif detalle.instancia.estado == 'Cancelada' %}bg-danger
+                    {% else %}bg-secondary{% endif %}">
+                    {{ detalle.instancia.estado }}
+                  </span>
+                </h6>
+                <small class="text-muted">
+                  Configuración ID: {{ detalle.instancia.idConfiguracion }}
+                </small>
+                <p class="small text-muted mb-1">
+                  <i class="bi bi-calendar-event me-1"></i>
+                  <strong>Inicio:</strong> {{ detalle.instancia.fechaInicio }}
+                  {% if detalle.instancia.fechaFinal %}
+                    | <strong>Final:</strong> {{ detalle.instancia.fechaFinal }}
+                  {% endif %}
+                </p>
+              </div>
+
+              <div class="text-end">
+                <p class="mb-1"><strong>Horas:</strong> {{ detalle.horas }}</p>
+                <p class="mb-0 text-success fw-bold">Subtotal: Q{{ detalle.subtotal }}</p>
+              </div>
+            </div>
+
+            <!-- Recursos -->
+            <div class="mt-3">
+              <h6 class="fw-semibold text-secondary">
+                <i class="bi bi-cpu me-1"></i> Recursos
+              </h6>
+              <ul class="list-group list-group-flush">
+                {% for recurso in detalle.recursos %}
+                  <li class="list-group-item bg-transparent px-0">
+                    <i class="bi bi-box me-1 text-primary"></i>
+                    <strong>{{ recurso.nombre }}</strong>
+                    <small class="text-muted">
+                      ({{ recurso.abreviatura }}: {{ recurso.cantidad }} {{ recurso.metrica }},
+                      Q{{ recurso.valorXhora }} / hora)
+                    </small>
+                  </li>
+                {% empty %}
+                  <li class="list-group-item bg-transparent px-0 text-muted fst-italic">
+                    Sin recursos
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <!-- Consumos -->
+            <div class="mt-3">
+              <h6 class="fw-semibold text-secondary">
+                <i class="bi bi-stopwatch me-1"></i> Consumos
+              </h6>
+              <ul class="list-group list-group-flush">
+                {% for consumo in detalle.consumos %}
+                  <li class="list-group-item bg-transparent px-0">
+                    <i class="bi bi-clock-history me-1 text-primary"></i>
+                    {{ consumo.fechaHora }} → {{ consumo.tiempo }} horas
+                  </li>
+                {% empty %}
+                  <li class="list-group-item bg-transparent px-0 text-muted fst-italic">
+                    Sin consumos registrados
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- BOTÓN PDF -->
+      <div class="text-end mt-3">
+        <a href="{{ factura_endpoint }}/{{ factura.id }}" class="btn btn-outline-primary btn-sm" target="_blank">
+          <i class="bi bi-file-earmark-pdf me-1"></i> Generar PDF
+        </a>
+      </div>
     </div>
   </div>
+{% empty %}
+  <div class="alert alert-info">
+    No hay facturas disponibles.
+  </div>
 {% endfor %}
-
 </div>
 {% endblock %}
 

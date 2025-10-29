@@ -32,6 +32,16 @@ class Factura:
             total=round(total, 2)
         )
 
+    def to_dict(self, incluir_detalles: bool = True) -> dict:
+        return {
+            "id": self.id,
+            "nitCliente": self.nitCliente,
+            "fechaEmision": self.fechaEmision,
+            "rango_inicio": self.rango_inicio,
+            "detalles": [detalle.to_dict() for detalle in self.detalles] if incluir_detalles else [],
+            "total": self.total,
+        }
+
     def to_xml_element(self) -> ET.Element:
         """
         Convierte la factura en un elemento XML.
