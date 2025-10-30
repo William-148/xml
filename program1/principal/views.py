@@ -70,6 +70,50 @@ def recursos(request):
         datos = {}
     return render(request, 'principal/recursos.html', {'datos': datos})
 
+@csrf_exempt
+def crearRecurso(request):
+    if request.method == 'POST':
+        try:
+            nombre = request.POST.get('nombre')
+            abreviatura = request.POST.get('abreviatura')
+            metrica = request.POST.get('metrica')
+            tipo = request.POST.get('tipo')
+            valor_x_hora = request.POST.get('valorXhora')
+
+            data = {
+                "nombre": nombre,
+                "abreviatura": abreviatura,
+                "metrica": metrica,
+                "tipo": tipo,
+                "valorXhora": float(valor_x_hora)
+            }
+
+            response = requests.post(
+                f"{settings.API_HOST}/recursos",
+                json=data
+            )
+
+            if response.status_code == 200:
+                messages.success(request, 'Recurso creado exitosamente.')
+            else:
+                try:
+                    error_data = response.json()
+                    error_msg = error_data.get('error', 'Error desconocido')
+                except:
+                    error_msg = f'Error {response.status_code} al crear el recurso'
+
+                messages.error(request, error_msg)
+
+        except ValueError as e:
+            messages.error(request, 'El valor por hora debe ser un número válido.')
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f'Error de conexión con la API: {str(e)}')
+        except Exception as e:
+            messages.error(request, f'Error inesperado: {str(e)}')
+
+    return redirect('recursos')
+
+
 def categorias(request):
     try:
         response = requests.get(f"{settings.API_HOST}/categorias")

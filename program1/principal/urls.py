@@ -8,6 +8,7 @@ urlpatterns = [
     path('inicializar_sistema/', views.inicializar_sistema, name='inicializar_sistema'),
     path('operaciones/', views.operaciones, name='operaciones'),
     path('recursos/', views.recursos, name='recursos'),
+    path('recursos/crear', views.crearRecurso, name='crearRecurso'),
     path('categorias/', views.categorias, name='categorias'),
     path('clientes/', views.clientes, name='clientes'),
     path('facturas/', views.facturas, name='facturas'),

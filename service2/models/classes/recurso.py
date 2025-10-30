@@ -89,3 +89,17 @@ class Recurso:
         ET.indent(tree, space="  ", level=0)
         tree.write("data/recursos.xml", encoding="utf-8", xml_declaration=True)
 
+    @staticmethod
+    def add_recurso(nombre:str, abreviatura:str, metrica:str, tipo:str, valorXhora: float ) -> None:
+        recursos = Recurso.get_all()
+        new_recurso = Recurso(
+            id= 100 + len(recursos) + 1,
+            nombre=nombre,
+            abreviatura=abreviatura,
+            metrica=metrica,
+            tipo=tipo,
+            valorXhora=valorXhora
+        )
+        recursos.append(new_recurso)
+        Recurso.write_xml(recursos)
+

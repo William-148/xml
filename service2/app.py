@@ -5,6 +5,7 @@ from services.facturacion_service import FacturacionService
 from services.factura_pdf_service import FacturaPdfService
 from services.state_service import StateService
 from services.reporte_service import ReporteService
+from models.classes.recurso import Recurso
 
 import os
 import glob
@@ -37,6 +38,22 @@ def get_recursos():
 
     except Exception as e:
         return jsonify({"error": f"Error al procesar el archivo: {str(e)}"}), 500
+
+@app.route('/recursos', methods=['POST'])
+def create_recursos():
+    try:
+        data = request.get_json()
+        Recurso.add_recurso(
+            data.get("nombre"),
+            data.get("abreviatura"),
+            data.get("metrica"), 
+            data.get("tipo"),
+            float(data.get("valorXhora"))
+        )
+        return jsonify({"message": "Creado con éxito."}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Error al crear recurso: {str(e)}"}), 500
 
 @app.route('/categorias')
 def get_categorias():
