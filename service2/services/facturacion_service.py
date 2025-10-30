@@ -60,6 +60,7 @@ class FacturacionService:
                 detalles.append(
                     DetalleFactura(
                         idInstancia=grupo.idInstancia,
+                        idConfiguracion=id_conf,
                         horas=horas,
                         subtotal=subtotal,
                         recursos_cantidad=recursos_cantidad,

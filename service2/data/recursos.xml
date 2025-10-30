@@ -35,4 +35,39 @@
     <tipo>Software</tipo>
     <valorXhora>82.5</valorXhora>
   </recurso>
+  <recurso id="6">
+    <nombre>Tarjeta gráfica</nombre>
+    <abreviatura>GPU</abreviatura>
+    <metrica>Unidad</metrica>
+    <tipo>Hardware</tipo>
+    <valorXhora>120.0</valorXhora>
+  </recurso>
+  <recurso id="7">
+    <nombre>Sistema operativo</nombre>
+    <abreviatura>SO</abreviatura>
+    <metrica>Licencia</metrica>
+    <tipo>Software</tipo>
+    <valorXhora>90.0</valorXhora>
+  </recurso>
+  <recurso id="8">
+    <nombre>Base de datos SQL</nombre>
+    <abreviatura>SQLDB</abreviatura>
+    <metrica>Instancia</metrica>
+    <tipo>Software</tipo>
+    <valorXhora>110.0</valorXhora>
+  </recurso>
+  <recurso id="9">
+    <nombre>Monitor</nombre>
+    <abreviatura>MON</abreviatura>
+    <metrica>Unidad</metrica>
+    <tipo>Hardware</tipo>
+    <valorXhora>45.0</valorXhora>
+  </recurso>
+  <recurso id="10">
+    <nombre>Framework de desarrollo</nombre>
+    <abreviatura>FWK</abreviatura>
+    <metrica>Licencia</metrica>
+    <tipo>Software</tipo>
+    <valorXhora>70.0</valorXhora>
+  </recurso>
 </listaRecursos>

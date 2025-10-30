@@ -23,4 +23,50 @@
       </instancia>
     </listaInstancias>
   </cliente>
+  <cliente nit="2020001-9">
+    <nombre>María Pérez</nombre>
+    <usuario>mperez</usuario>
+    <clave>clave123</clave>
+    <direccion>Zona 10, Ciudad de Guatemala</direccion>
+    <correoElectronico>maria.perez@example.com</correoElectronico>
+    <listaInstancias>
+      <instancia id="3">
+        <idConfiguracion>3</idConfiguracion>
+        <nombre>Servidor Render María</nombre>
+        <fechaInicio>01/03/2022</fechaInicio>
+        <estado>Vigente</estado>
+        <fechaFinal> </fechaFinal>
+      </instancia>
+      <instancia id="4">
+        <idConfiguracion>4</idConfiguracion>
+        <nombre>Diseño Gráfico Profesional</nombre>
+        <fechaInicio>15/05/2023</fechaInicio>
+        <estado>Vigente</estado>
+        <fechaFinal> </fechaFinal>
+      </instancia>
+    </listaInstancias>
+  </cliente>
+  <cliente nit="2021055-3">
+    <nombre>Juan López</nombre>
+    <usuario>jlopez</usuario>
+    <clave>juanpass</clave>
+    <direccion>Zona 3, Quetzaltenango</direccion>
+    <correoElectronico>juan.lopez@example.com</correoElectronico>
+    <listaInstancias>
+      <instancia id="5">
+        <idConfiguracion>5</idConfiguracion>
+        <nombre>Servidor SQL Empresarial</nombre>
+        <fechaInicio>01/06/2021</fechaInicio>
+        <estado>Vigente</estado>
+        <fechaFinal> </fechaFinal>
+      </instancia>
+      <instancia id="6">
+        <idConfiguracion>6</idConfiguracion>
+        <nombre>Aplicaciones Web Corporativas</nombre>
+        <fechaInicio>10/07/2022</fechaInicio>
+        <estado>Vigente</estado>
+        <fechaFinal> </fechaFinal>
+      </instancia>
+    </listaInstancias>
+  </cliente>
 </listaClientes>

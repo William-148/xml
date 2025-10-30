@@ -91,23 +91,33 @@ class Cliente:
 
     @staticmethod
     def get_all() -> List[Cliente]:
-        tree = ET.parse("data/clientes.xml")
-        root = tree.getroot()
-        clientes = []
-        for cli_el in root.findall("cliente"):
-            cli, _ = Cliente.from_element(cli_el)
-            clientes.append(cli)
-        return clientes
+        try:
+            tree = ET.parse("data/clientes.xml")
+            root = tree.getroot()
+            clientes = []
+            for cli_el in root.findall("cliente"):
+                cli, _ = Cliente.from_element(cli_el)
+                clientes.append(cli)
+            return clientes
+        except Exception as e:
+            print(f"Error inesperado al leer clientes.xml: {e}")
+            return []
+ 
 
     @staticmethod
     def get_all_dict() -> Dict[str, Cliente]:
-        tree = ET.parse("data/clientes.xml")
-        root = tree.getroot()
-        clientes = {}
-        for cli_el in root.findall("cliente"):
-            cli, _ = Cliente.from_element(cli_el)
-            clientes[cli.nit] = cli
-        return clientes
+        try:
+            tree = ET.parse("data/clientes.xml")
+            root = tree.getroot()
+            clientes = {}
+            for cli_el in root.findall("cliente"):
+                cli, _ = Cliente.from_element(cli_el)
+                clientes[cli.nit] = cli
+            return clientes
+        except Exception as e:
+            print(f"Error inesperado al leer clientes.xml: {e}")
+            return {}
+
 
     @staticmethod
     def get_by_nit(nit_cliente:int) -> Optional[Cliente]:

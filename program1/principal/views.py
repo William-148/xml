@@ -4,6 +4,7 @@ from datetime import datetime
 from django.contrib import messages
 from .services.configuration_service import enviar_configuracion, enviar_consumo
 from django.conf import settings
+from django.http import HttpResponse
 import requests
 
 # Create your views here.
@@ -127,6 +128,50 @@ def facturacion(request):
         return render(request, 'principal/operaciones.html', {"resultado": datos})
     return redirect('operaciones')
 
+@csrf_exempt
 def reportes(request):
-    return render(request, 'principal/reportes.html')
+    if request.method == 'POST':
+        fecha_inicio_raw = request.POST.get('fecha_inicio')
+        fecha_fin_raw = request.POST.get('fecha_fin')
+        tipo_reporte = request.POST.get('tipo_reporte')
 
+        # Convertir a objeto datetime
+        fecha_inicio_obj = datetime.strptime(fecha_inicio_raw, '%Y-%m-%d')
+        fecha_fin_obj = datetime.strptime(fecha_fin_raw, '%Y-%m-%d')
+
+        fecha_inicio = fecha_inicio_obj.strftime('%d/%m/%Y')
+        fecha_fin = fecha_fin_obj.strftime('%d/%m/%Y')
+        # Aquí haces la lógica para generar las facturas
+        try:
+            response = requests.post(
+                f"{settings.API_HOST}/reporte/{tipo_reporte}",
+                json={"fecha_inicio": fecha_inicio, "fecha_fin": fecha_fin}
+            )
+
+            if response.status_code == 200:
+                # Crear una respuesta HTTP con el contenido PDF para nueva pestaña
+                pdf_response = HttpResponse(
+                    response.content,
+                    content_type='application/pdf'
+                )
+
+                # Configurar para visualización en el navegador
+                nombre_reporte = "categorias_configuraciones" if tipo_reporte == "1" else "recursos"
+                filename = f"reporte_{nombre_reporte}_{fecha_inicio_raw}_{fecha_fin_raw}.pdf"
+
+                pdf_response['Content-Disposition'] = f'inline; filename="{filename}"'
+                return pdf_response
+
+            else:
+                datos = response.json()
+                messages.error(request, f'No se pudo generar el reporte. {datos.get("error", "Error desconocido")}')
+                return redirect('operaciones')
+
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f'Error al conectar con el servicio de reportes: {str(e)}')
+            return redirect('operaciones')
+        except Exception as e:
+            messages.error(request, f'Error inesperado: {str(e)}')
+            return redirect('operaciones')
+
+    return redirect('operaciones')

@@ -23,4 +23,54 @@
       </configuracion>
     </listaConfiguraciones>
   </categoria>
+  <categoria id="2">
+    <nombre>Categoria 2</nombre>
+    <descripcion>Configuraciones para aplicaciones gráficas</descripcion>
+    <cargaTrabajo>Media</cargaTrabajo>
+    <listaConfiguraciones>
+      <configuracion id="3">
+        <nombre>Cat2-Conf1</nombre>
+        <descripcion>Configuración para renderizado</descripcion>
+        <recursosConfiguracion>
+          <recurso id="1">16.0</recurso>
+          <recurso id="2">8.0</recurso>
+          <recurso id="6">2.0</recurso>
+        </recursosConfiguracion>
+      </configuracion>
+      <configuracion id="4">
+        <nombre>Cat2-Conf2</nombre>
+        <descripcion>Configuración para diseño gráfico</descripcion>
+        <recursosConfiguracion>
+          <recurso id="6">1.0</recurso>
+          <recurso id="9">2.0</recurso>
+          <recurso id="7">1.0</recurso>
+        </recursosConfiguracion>
+      </configuracion>
+    </listaConfiguraciones>
+  </categoria>
+  <categoria id="3">
+    <nombre>Categoria 3</nombre>
+    <descripcion>Configuraciones de servidores de datos</descripcion>
+    <cargaTrabajo>Alta</cargaTrabajo>
+    <listaConfiguraciones>
+      <configuracion id="5">
+        <nombre>Cat3-Conf1</nombre>
+        <descripcion>Servidor SQL empresarial</descripcion>
+        <recursosConfiguracion>
+          <recurso id="2">12.0</recurso>
+          <recurso id="3">200.0</recurso>
+          <recurso id="8">1.0</recurso>
+        </recursosConfiguracion>
+      </configuracion>
+      <configuracion id="6">
+        <nombre>Cat3-Conf2</nombre>
+        <descripcion>Servidor de aplicaciones web</descripcion>
+        <recursosConfiguracion>
+          <recurso id="2">6.0</recurso>
+          <recurso id="7">1.0</recurso>
+          <recurso id="10">1.0</recurso>
+        </recursosConfiguracion>
+      </configuracion>
+    </listaConfiguraciones>
+  </categoria>
 </listaCategorias>

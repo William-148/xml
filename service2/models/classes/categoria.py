@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 from models.classes.configuracion import Configuracion
 import xml.etree.ElementTree as ET
 
@@ -65,13 +65,18 @@ class Categoria:
 
     @staticmethod
     def get_all() -> List[Categoria]:
-        tree = ET.parse("data/categorias.xml")
-        root = tree.getroot()
-        categorias = []
-        for cat_el in root.findall("categoria"):
-            cat = Categoria.from_element(cat_el)
-            categorias.append(cat)
-        return categorias
+        try:
+            tree = ET.parse("data/categorias.xml")
+            root = tree.getroot()
+            categorias = []
+            for cat_el in root.findall("categoria"):
+                cat = Categoria.from_element(cat_el)
+                categorias.append(cat)
+            return categorias
+        except Exception as e:
+            print(f"Error inesperado al leer categorias.xml: {e}")
+            return []
+
 
     @staticmethod
     def get_dict_categorias() -> Dict[int, Dict[str, Optional[object]]]:
@@ -79,13 +84,18 @@ class Categoria:
         Carga todas las categorias y devuelve un diccionario
         {id_categoria: diccionario}.
         """
-        tree = ET.parse("data/categorias.xml")
-        root = tree.getroot()
-        categorias = {}
-        for cat_el in root.findall("categoria"):
-            cat = Categoria.from_element(cat_el)
-            categorias[cat.id] = cat.to_dict()
-        return categorias
+        try:
+            tree = ET.parse("data/categorias.xml")
+            root = tree.getroot()
+            categorias = {}
+            for cat_el in root.findall("categoria"):
+                cat = Categoria.from_element(cat_el)
+                categorias[cat.id] = cat.to_dict()
+            return categorias
+        except Exception as e:
+            print(f"Error inesperado al leer categorias.xml: {e}")
+            return {}
+
 
     @staticmethod
     def get_dict_configuraciones() -> Dict[int, Configuracion]:
@@ -93,13 +103,50 @@ class Categoria:
         Carga todas las configuraciones y devuelve un diccionario
         {id_configuracion: Configuracion}.
         """
-        tree = ET.parse("data/categorias.xml")
-        root = tree.getroot()
-        configs = {}
-        for cat_el in root.findall("categoria"):
-            cat = Categoria.from_element(cat_el)
-            for conf in cat.configuraciones:
-                configs[conf.id] = conf
-        return configs
+        try:
+            tree = ET.parse("data/categorias.xml")
+            root = tree.getroot()
+            configs = {}
+            for cat_el in root.findall("categoria"):
+                cat = Categoria.from_element(cat_el)
+                for conf in cat.configuraciones:
+                    configs[conf.id] = conf
+            return configs
+        except Exception as e:
+            print(f"Error inesperado al leer categorias.xml: {e}")
+            return {}
+
+
+
+class GestorCategoria:
+
+    def __init__(self):
+        self.categorias: Dict[int, Categoria] = {}
+        self.configuraciones: Dict[int, Tuple[Configuracion, int]] = {}
+
+        try:
+            tree = ET.parse("data/categorias.xml")
+            root = tree.getroot()
+            categorias = {}
+            configuraciones = {}
+            for cat_el in root.findall("categoria"):
+                categoria = Categoria.from_element(cat_el)
+                self.categorias[categoria.id] = categoria
+                for configuracion in categoria.configuraciones:
+                    self.configuraciones[configuracion.id] = (configuracion, categoria.id)
+        except Exception as e:
+            print(f"Error inesperado al leer categorias.xml: {e}")
+
+
+    def get_categoria_by_id(self, id_categoria: int) -> Optional[Categoria]:
+        return self.categorias.get(id_categoria)
+
+    def get_config_by_id(self, id_configuracion: int) -> Optional[Configuracion]:
+        conf = self.configuraciones.get(id_configuracion)
+        return conf[0] if conf else None
+
+    def get_categoria_id_by_config_id(self, id_configuracion: int) -> Optional[int]:
+        conf = self.configuraciones.get(id_configuracion)
+        return conf[1] if conf else None
 
 

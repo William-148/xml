@@ -4,6 +4,7 @@ from services.process_xml_file import procesar_configuracion, procesar_consumo
 from services.facturacion_service import FacturacionService
 from services.factura_pdf_service import FacturaPdfService
 from services.state_service import StateService
+from services.reporte_service import ReporteService
 
 import os
 import glob
@@ -134,7 +135,6 @@ def limpiar_xml():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# @app.route('/facturas')
 @app.route("/facturas/<factura_id>")
 def generar_pdf_factura(factura_id: str):
     try:
@@ -162,6 +162,29 @@ def generar_facturas():
     except Exception as e:
         return jsonify({"error": f"Error al generar facturas: {str(e)}"}), 500
 
+@app.route("/reporte/<reporte_id>", methods=['POST'])
+def generar_reporte_pdf(reporte_id: str):
+    data = request.get_json()
+
+    fecha_inicio_str = data.get("fecha_inicio")
+    fecha_fin_str = data.get("fecha_fin")
+
+    if not fecha_inicio_str or not fecha_fin_str:
+        return jsonify({"error": "Rango de fecha no provisto."}), 400
+
+    try:
+        reporte_service = ReporteService(fecha_inicio_str, fecha_fin_str)
+        ruta_pdf = ""
+        if reporte_id == "1":
+            ruta_pdf = reporte_service.reporte1()
+        elif reporte_id == "2":
+            ruta_pdf = reporte_service.reporte2()
+        else:
+            return jsonify({"error": f"ID de reporte no válido '{reporte_id}'."}), 400
+        return send_file(ruta_pdf, mimetype="application/pdf", as_attachment=True)
+
+    except Exception as e:
+        return jsonify({"error": f"Error al generar reporte: {str(e)}"}), 500
 
 
 if __name__ == '__main__':

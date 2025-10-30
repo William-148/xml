@@ -88,13 +88,17 @@ class Factura:
         )
 
     @staticmethod
-    def get_all() -> Dict[int, Factura]:
-        tree = ET.parse("data/facturas.xml")
-        root = tree.getroot()
-        facturas = []
-        for r in root.findall("factura"):
-            facturas.append(Factura.from_element(r))
-        return facturas
+    def get_all() -> List[Factura]:
+        try:
+            tree = ET.parse("data/facturas.xml")
+            root = tree.getroot()
+            facturas = []
+            for r in root.findall("factura"):
+                facturas.append(Factura.from_element(r))
+            return facturas
+        except Exception as e:
+            print(f"Error inesperado al leer facturas.xml: {e}")
+            return []
 
     @staticmethod
     def get_by_id(factura_id: int) -> Optional[Factura]:

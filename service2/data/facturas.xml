@@ -1,39 +1,78 @@
 <?xml version='1.0' encoding='utf-8'?>
 <listaFacturas>
-  <factura id="6966050529222673185" nitCliente="2019160-K">
-    <fechaEmision>29/10/2025</fechaEmision>
-    <rangoInicio>15/10/2003</rangoInicio>
+  <factura id="6125308135065076040" nitCliente="2019160-K">
+    <fechaEmision>31/10/2025</fechaEmision>
+    <rangoInicio>09/10/2022</rangoInicio>
     <detalles>
-      <instancia id="1" horas="13.00" subtotal="Q14625.00">
+      <instancia id="1" idConfiguracion="1" horas="20.25" subtotal="Q22781.25">
         <recursos>
           <recurso id="1" cantidad="25.00" />
           <recurso id="3" cantidad="5.00" />
         </recursos>
         <consumos>
-          <consumo tiempo="2.60" fechaHora="15/06/2005 08:30" />
-          <consumo tiempo="7.50" fechaHora="03/05/2012 12:00" />
-          <consumo tiempo="2.90" fechaHora="21/11/2017 16:20" />
+          <consumo tiempo="12.50" fechaHora="15/01/2023 10:00" />
+          <consumo tiempo="7.75" fechaHora="20/01/2023 16:30" />
         </consumos>
       </instancia>
     </detalles>
-    <total>Q14625.00</total>
+    <total>Q22781.25</total>
   </factura>
-  <factura id="1008172638227152911" nitCliente="2019160-K">
-    <fechaEmision>15/06/2011</fechaEmision>
-    <rangoInicio>15/02/2005</rangoInicio>
+  <factura id="9973849591599943539" nitCliente="2020001-9">
+    <fechaEmision>31/10/2025</fechaEmision>
+    <rangoInicio>09/10/2022</rangoInicio>
     <detalles>
-      <instancia id="1" horas="8.78" subtotal="Q9877.50">
+      <instancia id="3" idConfiguracion="3" horas="11.25" subtotal="Q14850.00">
         <recursos>
-          <recurso id="1" cantidad="25.00" />
-          <recurso id="3" cantidad="5.00" />
+          <recurso id="1" cantidad="16.00" />
+          <recurso id="2" cantidad="8.00" />
+          <recurso id="6" cantidad="2.00" />
         </recursos>
         <consumos>
-          <consumo tiempo="2.60" fechaHora="15/06/2005 08:30" />
-          <consumo tiempo="1.00" fechaHora="19/07/2009 14:15" />
-          <consumo tiempo="5.18" fechaHora="14/08/2010 09:45" />
+          <consumo tiempo="5.00" fechaHora="01/04/2023 08:00" />
+          <consumo tiempo="6.25" fechaHora="05/04/2023 12:45" />
+        </consumos>
+      </instancia>
+      <instancia id="4" idConfiguracion="4" horas="7.50" subtotal="Q2250.00">
+        <recursos>
+          <recurso id="6" cantidad="1.00" />
+          <recurso id="9" cantidad="2.00" />
+          <recurso id="7" cantidad="1.00" />
+        </recursos>
+        <consumos>
+          <consumo tiempo="3.50" fechaHora="10/06/2023 14:15" />
+          <consumo tiempo="4.00" fechaHora="12/06/2023 09:30" />
         </consumos>
       </instancia>
     </detalles>
-    <total>Q9877.50</total>
+    <total>Q17100.00</total>
+  </factura>
+  <factura id="5246118396462318773" nitCliente="2021055-3">
+    <fechaEmision>31/10/2025</fechaEmision>
+    <rangoInicio>09/10/2022</rangoInicio>
+    <detalles>
+      <instancia id="5" idConfiguracion="5" horas="18.25" subtotal="Q105302.50">
+        <recursos>
+          <recurso id="2" cantidad="12.00" />
+          <recurso id="3" cantidad="200.00" />
+          <recurso id="8" cantidad="1.00" />
+        </recursos>
+        <consumos>
+          <consumo tiempo="10.00" fechaHora="15/02/2023 11:00" />
+          <consumo tiempo="8.25" fechaHora="18/02/2023 17:45" />
+        </consumos>
+      </instancia>
+      <instancia id="6" idConfiguracion="6" horas="16.50" subtotal="Q8085.00">
+        <recursos>
+          <recurso id="2" cantidad="6.00" />
+          <recurso id="7" cantidad="1.00" />
+          <recurso id="10" cantidad="1.00" />
+        </recursos>
+        <consumos>
+          <consumo tiempo="9.50" fechaHora="20/03/2023 13:00" />
+          <consumo tiempo="7.00" fechaHora="22/03/2023 15:30" />
+        </consumos>
+      </instancia>
+    </detalles>
+    <total>Q113387.50</total>
   </factura>
 </listaFacturas>

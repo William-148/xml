@@ -39,23 +39,33 @@ class Recurso:
 
     @staticmethod
     def get_all() -> List[Recurso]:
-        tree = ET.parse("data/recursos.xml")
-        root = tree.getroot()
-        recursos = []
-        for r in root.findall("recurso"):
-            rec = Recurso.from_element(r)
-            recursos.append(rec)
-        return recursos
+        try:
+            tree = ET.parse("data/recursos.xml")
+            root = tree.getroot()
+            recursos = []
+            for r in root.findall("recurso"):
+                rec = Recurso.from_element(r)
+                recursos.append(rec)
+            return recursos
+        except Exception as e:
+            print(f"Error inesperado al leer recursos.xml: {e}")
+            return []
+
 
     @staticmethod
     def get_dict_recursos() -> Dict[int, Recurso]:
-        tree = ET.parse("data/recursos.xml")
-        root = tree.getroot()
-        recursos = {}
-        for r in root.findall("recurso"):
-            rec = Recurso.from_element(r)
-            recursos[rec.id] = rec
-        return recursos
+        try:
+            tree = ET.parse("data/recursos.xml")
+            root = tree.getroot()
+            recursos = {}
+            for r in root.findall("recurso"):
+                rec = Recurso.from_element(r)
+                recursos[rec.id] = rec
+            return recursos
+        except Exception as e:
+            print(f"Error inesperado al leer recursos.xml: {e}")
+            return {}
+
  
 
     @staticmethod

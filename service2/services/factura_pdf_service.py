@@ -114,7 +114,7 @@ class FacturaPdfService:
             elements.append(Paragraph("Recursos Asociados", styles["Subtitulo"]))
             data_recursos = [["Recurso", "Cantidad", "Precio/Hora", "Aporte (Q)"]]
             for rid, cantidad in detalle.recursos_cantidad.items():
-                recurso = self.recursos[rid]
+                recurso = self.recursos.get(rid)
                 if recurso is None:
                     continue
                 precio = recurso.valorXhora

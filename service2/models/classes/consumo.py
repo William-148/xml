@@ -75,30 +75,39 @@ class GrupoConsumos:
         GrupoConsumos.write_xml(list(grupos_existentes.values()))
 
     def get_all() -> List[GrupoConsumos]:
-        tree = ET.parse("data/consumos.xml")
-        root = tree.getroot()
-        grupos = []
-        for grupo_el in root.findall("grupoConsumos"):
-            nit = grupo_el.attrib["nitCliente"]
-            id_inst = int(grupo_el.attrib["idInstancia"])
-            grupo = GrupoConsumos(nitCliente=nit, idInstancia=id_inst)
-            for consumo_el in grupo_el.findall("consumo"):
-                grupo.consumos.append(Consumo.from_xml_element(consumo_el))
-            grupos.append(grupo)
-        return grupos
+        try:
+            tree = ET.parse("data/consumos.xml")
+            root = tree.getroot()
+            grupos = []
+            for grupo_el in root.findall("grupoConsumos"):
+                nit = grupo_el.attrib["nitCliente"]
+                id_inst = int(grupo_el.attrib["idInstancia"])
+                grupo = GrupoConsumos(nitCliente=nit, idInstancia=id_inst)
+                for consumo_el in grupo_el.findall("consumo"):
+                    grupo.consumos.append(Consumo.from_xml_element(consumo_el))
+                grupos.append(grupo)
+            return grupos
+        except Exception as e:
+            print(f"Error inesperado al leer consumos.xml: {e}")
+            return []
 
     def get_all_dict() -> Dict[str, GrupoConsumos]:
-        tree = ET.parse("data/consumos.xml")
-        root = tree.getroot()
-        grupos = {}
-        for grupo_el in root.findall("grupoConsumos"):
-            nit = grupo_el.attrib["nitCliente"]
-            id_inst = int(grupo_el.attrib["idInstancia"])
-            grupo = GrupoConsumos(nitCliente=nit, idInstancia=id_inst)
-            for consumo_el in grupo_el.findall("consumo"):
-                grupo.consumos.append(Consumo.from_xml_element(consumo_el))
-            grupos[f"{grupo.nitCliente.lower()}-{str(grupo.idInstancia)}"] = grupo
-        return grupos
+        try:
+            tree = ET.parse("data/consumos.xml")
+            root = tree.getroot()
+            grupos = {}
+            for grupo_el in root.findall("grupoConsumos"):
+                nit = grupo_el.attrib["nitCliente"]
+                id_inst = int(grupo_el.attrib["idInstancia"])
+                grupo = GrupoConsumos(nitCliente=nit, idInstancia=id_inst)
+                for consumo_el in grupo_el.findall("consumo"):
+                    grupo.consumos.append(Consumo.from_xml_element(consumo_el))
+                grupos[f"{grupo.nitCliente.lower()}-{str(grupo.idInstancia)}"] = grupo
+            return grupos
+        except Exception as e:
+            print(f"Error inesperado al leer consumos.xml: {e}")
+            return {}
+
 
 
 

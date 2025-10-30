@@ -9,6 +9,7 @@ class DetalleFactura:
     Representa el detalle de una factura (una línea por instancia).
     """
     idInstancia: int
+    idConfiguracion: int
     horas: float
     subtotal: float
     recursos_cantidad: Dict[int, float] = field(default_factory=dict)
@@ -17,6 +18,7 @@ class DetalleFactura:
     def to_dict(self) -> dict:
         return {
             "idInstancia": self.idInstancia,
+            "idConfiguracion": self.idConfiguracion,
             "horas": self.horas,
             "subtotal": self.subtotal,
             "recursos": self.recursos_cantidad,
@@ -29,6 +31,7 @@ class DetalleFactura:
         """
         detalle_el = ET.Element("instancia", attrib={
             "id": str(self.idInstancia),
+            "idConfiguracion": str(self.idConfiguracion),
             "horas": f"{self.horas:.2f}",
             "subtotal": f"Q{self.subtotal:.2f}"
         })
@@ -55,6 +58,7 @@ class DetalleFactura:
     @staticmethod
     def from_element(element: ET.Element) -> DetalleFactura:
         id_instancia = int(element.get("id", "0"))
+        id_configuracion = int(element.get("idConfiguracion", "0"))
         horas = float(element.get("horas", "0"))
         subtotal_str = element.get("subtotal", "Q0.00").replace("Q", "").strip()
 
@@ -79,6 +83,7 @@ class DetalleFactura:
 
         return DetalleFactura(
             idInstancia=id_instancia,
+            idConfiguracion=id_configuracion,
             horas=horas,
             subtotal=subtotal,
             recursos_cantidad=recursos_cantidad,
