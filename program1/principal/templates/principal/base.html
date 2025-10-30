@@ -21,6 +21,27 @@
         <li class="nav-item"><a class="nav-link" href="{% url 'operaciones' %}">Operaciones del sistema</a></li>
       </ul>
     </div>
+
+          <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-question-circle me-1"></i>Ayuda
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalEstudiante">
+                <i class="bi bi-person-badge me-2"></i>Información del Estudiante
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalDocumentacion">
+                <i class="bi bi-book me-2"></i>Documentación
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
   </div>
 </nav>
 
@@ -28,6 +49,60 @@
     {% block content %}
     <!-- Aquí va el contenido de cada página -->
     {% endblock %}
+
+<div class="modal fade" id="modalEstudiante" tabindex="-1" aria-labelledby="modalEstudianteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalEstudianteLabel">
+          <i class="bi bi-person-badge me-2"></i>Información del Estudiante
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-4 text-center mb-3">
+            <div class="bg-primary bg-opacity-10 rounded-circle p-4 d-inline-block">
+              <i class="bi bi-person-circle text-primary fs-1"></i>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-primary">Nombre:</label>
+              <p class="mb-0">Jorge Ivan Chic Lajuj</p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-primary">Carnet:</label>
+              <p class="mb-0">201709431</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDocumentacion" tabindex="-1" aria-labelledby="modalDocumentacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalDocumentacionLabel">
+          <i class="bi bi-book me-2"></i>Documentación del Sistema
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Pendiente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% if messages %}
   <div id="snackbar-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
