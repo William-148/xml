@@ -7,6 +7,7 @@ from services.state_service import StateService
 from services.reporte_service import ReporteService
 from models.classes.recurso import Recurso
 from models.classes.categoria import Categoria
+from models.classes.cliente import Cliente
 
 import os
 import glob
@@ -96,7 +97,6 @@ def get_clientes():
 def create_cliente():
     try:
         data = request.get_json()
-        from models.classes.cliente import Cliente
         Cliente.add_cliente(
             data.get("nit"),
             data.get("nombre"),
@@ -107,6 +107,18 @@ def create_cliente():
     except Exception as e:
         return jsonify({"error": f"Error al crear cliente: {str(e)}"}), 500
 
+@app.route('/clientes/instancias', methods=['POST'])
+def create_instancia():
+    try:
+        data = request.get_json()
+        Cliente.add_instancia(
+            data.get("nitCliente"),
+            int(data.get("idConfiguracion")),
+            data.get("nombre"),
+        )
+        return jsonify({"message": "Instancia creada con éxito."}), 200
+    except Exception as e:
+        return jsonify({"error": f"Error al crear instancia: {str(e)}"}), 500
 
 @app.route('/facturas')
 def get_facturas():

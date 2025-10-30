@@ -168,6 +168,22 @@ def clientes(request):
         datos = {}
     return render(request, 'principal/clientes.html', {'datos': datos})
 
+def formulario_instancia(request, nitCliente):
+    # Obtener configuraciones disponibles
+    try:
+        response = requests.get(f"{settings.API_HOST}/categorias")
+        datos = response.json() if response.status_code == 200 else {}
+    except requests.exceptions.RequestException:
+        datos = {}
+
+
+    context = {
+        'nitCliente': nitCliente,
+        'datos': datos 
+    }
+
+    return render(request, 'principal/formulario_instancia.html', context)
+
 def crearCliente(request):
     if request.method == 'POST':
         try:
@@ -205,6 +221,38 @@ def crearCliente(request):
             messages.error(request, f'Error inesperado: {str(e)}')
 
     return redirect('clientes')
+
+def crearClienteInstancia(request, nitCliente):
+    if request.method == 'POST':
+        try:
+            data = {
+                "nitCliente": nitCliente,
+                "idConfiguracion": request.POST.get('idConfiguracion'),
+                "nombre": request.POST.get('nombre'),
+            }
+
+            response = requests.post(
+                f"{settings.API_HOST}/clientes/instancias",
+                json=data
+            )
+
+            if response.status_code == 200:
+                messages.success(request, 'Instancia creada exitosamente.')
+            else:
+                try:
+                    error_data = response.json()
+                    error_msg = error_data.get('error', 'Error desconocido')
+                except:
+                    error_msg = f'Error {response.status_code} al crear el instancia'
+
+                messages.error(request, error_msg)
+
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f'Error de conexión con la API: {str(e)}')
+        except Exception as e:
+            messages.error(request, f'Error inesperado: {str(e)}')
+
+    return redirect('formulario_instancia', nitCliente=nitCliente)
 
 
 def facturas(request):

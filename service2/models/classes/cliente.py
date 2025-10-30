@@ -7,6 +7,9 @@ import random
 import string
 from models.classes.instancia import Instancia
 from models.exceptions import ValidationError
+import uuid
+from datetime import datetime
+
 
 @dataclass
 class Cliente:
@@ -151,4 +154,25 @@ class Cliente:
         )
         clientes.append(nuevo_cliente)
         Cliente.write_xml(clientes)
+
+    @staticmethod
+    def add_instancia(nitCliente: str, idConfiguracion: int, nombre: str) -> None:
+        clientes = Cliente.get_all()
+        nuevo_id = uuid.uuid4().int >> 16
+        fecha_actual = datetime.now().strftime("%d/%m/%Y")
+
+        nueva_instancia = Instancia(
+            id=nuevo_id,
+            idConfiguracion=idConfiguracion,
+            nombre=nombre,
+            fechaInicio=fecha_actual,
+            estado="Vigente",
+            fechaFinal=""
+        )
+
+        cliente_encontrado = next((c for c in clientes if c.nit == nitCliente), None)
+        if cliente_encontrado:
+            cliente_encontrado.instancias.append(nueva_instancia)
+            Cliente.write_xml(clientes)
+
 

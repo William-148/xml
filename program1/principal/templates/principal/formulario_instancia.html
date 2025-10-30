@@ -1,0 +1,206 @@
+{% extends 'principal/base.html' %}
+{% load static %}
+
+{% block title %}Formulario Instancia{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">
+            <i class="bi bi-plus-circle me-1"></i>Nueva Instancia - Cliente: {{ nitCliente }}
+          </h5>
+        </div>
+        <div class="card-body">
+          <form id="formCrearInstancia" method="POST" action="{% url 'crearClienteInstancia' nitCliente %}">
+            {% csrf_token %}
+            
+            <!-- Campo para nombre de la instancia -->
+            <div class="row mb-4">
+              <div class="col-12">
+                <label for="nombre" class="form-label fw-semibold">Nombre de la Instancia *</label>
+                <input type="text" class="form-control form-control-lg" id="nombre" name="nombre" required 
+                       placeholder="Ej: Servidor Web Principal, Aplicación de Base de Datos">
+                <div class="form-text">Ingresa un nombre descriptivo para identificar esta instancia</div>
+              </div>
+            </div>
+
+            <!-- Selección de configuración organizada por categorías -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Selecciona una Configuración *</label>
+              <div class="accordion" id="accordionCategorias">
+                {% for categoria in datos.categorias %}
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" 
+                            data-bs-toggle="collapse" data-bs-target="#collapse{{ categoria.id }}">
+                      <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                        <div>
+                          <i class="bi bi-grid-3x3-gap me-2"></i>
+                          <strong>{{ categoria.nombre }}</strong>
+                        </div>
+                        <div>
+                          <span class="badge bg-{% if categoria.cargaTrabajo == 'Alta' %}danger{% elif categoria.cargaTrabajo == 'Media' %}warning{% else %}success{% endif %} me-2">
+                            {{ categoria.cargaTrabajo }}
+                          </span>
+                          <span class="badge bg-info">{{ categoria.configuraciones|length }} configs</span>
+                        </div>
+                      </div>
+                    </button>
+                  </h2>
+                  <div id="collapse{{ categoria.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" 
+                       data-bs-parent="#accordionCategorias">
+                    <div class="accordion-body">
+                      <p class="text-muted mb-3">{{ categoria.descripcion }}</p>
+                      
+                      <div class="row g-3">
+                        {% for config in categoria.configuraciones %}
+                        <div class="col-md-6">
+                          <div class="card h-100 config-card">
+                            <div class="card-body">
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="idConfiguracion" 
+                                       id="config{{ config.id }}" value="{{ config.id }}" required>
+                                <label class="form-check-label fw-semibold" for="config{{ config.id }}">
+                                  {{ config.nombre }}
+                                </label>
+                              </div>
+                              <p class="text-muted small mt-1 mb-2">{{ config.descripcion }}</p>
+                              
+                              <!-- Recursos de la configuración -->
+                              <div class="mt-3">
+                                <h6 class="small fw-semibold mb-2">Recursos incluidos:</h6>
+                                <div class="row g-1">
+                                  {% for recurso in config.recursos %}
+                                  <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center small">
+                                      <span>
+                                        <i class="bi bi-{% if recurso.tipo == 'Hardware' %}cpu{% else %}code-slash{% endif %} me-1"></i>
+                                        {{ recurso.nombre }} ({{ recurso.abreviatura }})
+                                      </span>
+                                      <span class="badge bg-light text-dark">
+                                        {{ recurso.cantidad }} {{ recurso.metrica }}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  {% endfor %}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Resumen de selección -->
+            <div class="card bg-light">
+              <div class="card-body">
+                <h6 class="card-title">Resumen de la Instancia</h6>
+                <div id="resumenSeleccion" class="text-muted">
+                  Selecciona una configuración para ver el resumen...
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a href="{% url 'clientes' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Volver a Clientes
+              </a>
+              
+              <button type="submit" class="btn btn-success btn-lg" id="btnCrear" disabled>
+                <i class="bi bi-check-circle me-1"></i>Crear Instancia
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.config-card {
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+.config-card:hover {
+  border-color: #0d6efd;
+  transform: translateY(-2px);
+}
+.config-card .form-check-input:checked ~ .card-body {
+  background-color: #f8f9fa;
+}
+.config-card .form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+</style>
+
+<script>
+// Actualizar resumen cuando se selecciona una configuración
+document.querySelectorAll('input[name="idConfiguracion"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    updateResumen();
+    document.getElementById('btnCrear').disabled = false;
+  });
+});
+
+// Actualizar cuando se escribe el nombre
+document.getElementById('nombre').addEventListener('input', function() {
+  updateResumen();
+});
+
+function updateResumen() {
+  const nombre = document.getElementById('nombre').value;
+  const configSeleccionada = document.querySelector('input[name="idConfiguracion"]:checked');
+  const resumenDiv = document.getElementById('resumenSeleccion');
+  
+  if (!configSeleccionada) {
+    resumenDiv.innerHTML = '<span class="text-muted">Selecciona una configuración para ver el resumen...</span>';
+    return;
+  }
+  
+  const card = configSeleccionada.closest('.config-card');
+  const nombreConfig = card.querySelector('.form-check-label').textContent;
+  const descripcion = card.querySelector('.text-muted').textContent;
+  
+  let recursosHTML = '';
+  card.querySelectorAll('.row.g-1 .col-12').forEach(recurso => {
+    recursosHTML += `<div class="small">${recurso.innerHTML}</div>`;
+  });
+  
+  resumenDiv.innerHTML = `
+    <div class="row">
+      <div class="col-md-6">
+        <strong>Nombre:</strong> ${nombre || '[Sin nombre]'}<br>
+        <strong>Configuración:</strong> ${nombreConfig}<br>
+        <strong>Descripción:</strong> ${descripcion}
+      </div>
+      <div class="col-md-6">
+        <strong>Recursos:</strong>
+        ${recursosHTML}
+      </div>
+    </div>
+  `;
+}
+
+// Efectos visuales para las tarjetas de configuración
+document.querySelectorAll('.config-card').forEach(card => {
+  card.addEventListener('click', function(e) {
+    if (!e.target.matches('input[type="radio"]')) {
+      const radio = this.querySelector('input[type="radio"]');
+      radio.checked = true;
+      radio.dispatchEvent(new Event('change'));
+    }
+  });
+});
+</script>
+{% endblock %}
