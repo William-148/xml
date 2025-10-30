@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 from typing import Dict, List,Tuple, Optional
 import xml.etree.ElementTree as ET
 import re
+import random
+import string
 from models.classes.instancia import Instancia
 from models.exceptions import ValidationError
 
@@ -25,7 +27,7 @@ class Cliente:
         """
         patron = r'^\d+-[0-9Kk]$'
         if not re.match(patron, self.nit):
-            raise ValidationError(f"NIT inválido '{self.nit}'.")
+            raise ValidationError(f"NIT inválido '{self.nit}'. Formato permitido 1234567-0 o 1234567-K.")
 
     def to_dict(self) -> Dict:
         """
@@ -132,4 +134,21 @@ class Cliente:
             pass
 
         return None
+
+    @staticmethod
+    def add_cliente(nit: str, nombre: str, direccion: str, correoElectronico: str) -> None:
+        clientes = Cliente.get_all()
+        usuario = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        clave = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+        nuevo_cliente = Cliente(
+            nit=nit,
+            nombre=nombre,
+            usuario=usuario,
+            clave=clave,
+            direccion=direccion,
+            correoElectronico=correoElectronico,
+            instancias=[]
+        )
+        clientes.append(nuevo_cliente)
+        Cliente.write_xml(clientes)
 

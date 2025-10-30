@@ -6,6 +6,7 @@ from services.factura_pdf_service import FacturaPdfService
 from services.state_service import StateService
 from services.reporte_service import ReporteService
 from models.classes.recurso import Recurso
+from models.classes.categoria import Categoria
 
 import os
 import glob
@@ -46,7 +47,7 @@ def create_recursos():
         Recurso.add_recurso(
             data.get("nombre"),
             data.get("abreviatura"),
-            data.get("metrica"), 
+            data.get("metrica"),
             data.get("tipo"),
             float(data.get("valorXhora"))
         )
@@ -66,6 +67,20 @@ def get_categorias():
     except Exception as e:
         return jsonify({"error": f"Error al procesar el archivo: {str(e)}"}), 500
 
+@app.route('/categorias', methods=['POST'])
+def create_categoria():
+    try:
+        data = request.get_json()
+        Categoria.add_categoria(
+            data.get("nombre"),
+            data.get("descripcion"),
+            data.get("cargaTrabajo"),
+        )
+        return jsonify({"message": "Creado con éxito."}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Error al crear recurso: {str(e)}"}), 500
+
 @app.route('/clientes')
 def get_clientes():
     try:
@@ -76,6 +91,22 @@ def get_clientes():
 
     except Exception as e:
         return jsonify({"error": f"Error al procesar el archivo: {str(e)}"}), 500
+
+@app.route('/clientes', methods=['POST'])
+def create_cliente():
+    try:
+        data = request.get_json()
+        from models.classes.cliente import Cliente
+        Cliente.add_cliente(
+            data.get("nit"),
+            data.get("nombre"),
+            data.get("direccion"),
+            data.get("correoElectronico")
+        )
+        return jsonify({"message": "Cliente creado con éxito."}), 200
+    except Exception as e:
+        return jsonify({"error": f"Error al crear cliente: {str(e)}"}), 500
+
 
 @app.route('/facturas')
 def get_facturas():

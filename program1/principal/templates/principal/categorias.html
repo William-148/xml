@@ -3,7 +3,61 @@
 
 {% block content %}
 <div class="container mt-4">
-  <h2>Categorías del Sistema</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Categorías del Sistema</h2>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#formularioCategoria">
+      <i class="bi bi-plus-square me-1"></i>Crear Categoría
+    </button>
+  </div>
+
+  
+  <!-- Formulario para crear categoría -->
+  <div class="collapse mb-4" id="formularioCategoria">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+          <i class="bi bi-plus-square me-1"></i>Nueva Categoría
+        </h5>
+      </div>
+      <div class="card-body">
+        <form id="formCrearCategoria" method="POST" action="{% url 'crearCategoria' %}">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="nombre" class="form-label fw-semibold">Nombre de la Categoría</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" required 
+                     placeholder="Ej: Categoría Ejemplo">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="cargaTrabajo" class="form-label fw-semibold">Carga de Trabajo</label>
+              <select class="form-select" id="cargaTrabajo" name="cargaTrabajo" required>
+                <option value="">Seleccionar carga...</option>
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+                <option value="Muy Alta">Muy Alta</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="descripcion" class="form-label fw-semibold">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required 
+                      placeholder="Ej: Servidores con alta exigencia para aplicaciones empresariales..."></textarea>
+          </div>
+          
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#formularioCategoria">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-check-circle me-1"></i>Crear Categoría
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Categorías -->
 {% for categoria in datos.categorias %}

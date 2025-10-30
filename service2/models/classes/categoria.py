@@ -116,6 +116,19 @@ class Categoria:
             print(f"Error inesperado al leer categorias.xml: {e}")
             return {}
 
+    @staticmethod
+    def add_categoria(nombre: str, descripcion: str, cargaTrabajo: str) -> None:
+        categorias = Categoria.get_all()
+        new_id = 100 + len(categorias) + 1
+        nueva_categoria = Categoria(
+            id=new_id,
+            nombre=nombre,
+            descripcion=descripcion,
+            cargaTrabajo=cargaTrabajo,
+            configuraciones=[]
+        )
+        categorias.append(nueva_categoria)
+        Categoria.write_xml(categorias)
 
 
 class GestorCategoria:

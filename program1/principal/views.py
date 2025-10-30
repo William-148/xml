@@ -122,6 +122,44 @@ def categorias(request):
         datos = {}
     return render(request, 'principal/categorias.html', {'datos': datos})
 
+def crearCategoria(request):
+    if request.method == 'POST':
+        try:
+            nombre = request.POST.get('nombre')
+            descripcion = request.POST.get('descripcion')
+            cargaTrabajo = request.POST.get('cargaTrabajo')
+
+            data = {
+                "nombre": nombre,
+                "descripcion": descripcion,
+                "cargaTrabajo": cargaTrabajo
+            }
+
+            response = requests.post(
+                f"{settings.API_HOST}/categorias",
+                json=data
+            )
+
+            if response.status_code == 200:
+                messages.success(request, 'categoria creado exitosamente.')
+            else:
+                try:
+                    error_data = response.json()
+                    error_msg = error_data.get('error', 'Error desconocido')
+                except:
+                    error_msg = f'Error {response.status_code} al crear el categoria'
+
+                messages.error(request, error_msg)
+
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f'Error de conexión con la API: {str(e)}')
+        except Exception as e:
+            messages.error(request, f'Error inesperado: {str(e)}')
+
+    return redirect('categorias')
+
+
+
 def clientes(request):
     try:
         response = requests.get(f"{settings.API_HOST}/clientes")
@@ -129,6 +167,45 @@ def clientes(request):
     except requests.exceptions.RequestException:
         datos = {}
     return render(request, 'principal/clientes.html', {'datos': datos})
+
+def crearCliente(request):
+    if request.method == 'POST':
+        try:
+            nit = request.POST.get('nit')
+            nombre = request.POST.get('nombre')
+            direccion = request.POST.get('direccion')
+            correo_electronico = request.POST.get('correoElectronico')
+
+            data = {
+                "nit": nit,
+                "nombre": nombre,
+                "direccion": direccion,
+                "correoElectronico": correo_electronico
+            }
+
+            response = requests.post(
+                f"{settings.API_HOST}/clientes",
+                json=data
+            )
+
+            if response.status_code == 200:
+                messages.success(request, 'cliente creado exitosamente.')
+            else:
+                try:
+                    error_data = response.json()
+                    error_msg = error_data.get('error', 'Error desconocido')
+                except:
+                    error_msg = f'Error {response.status_code} al crear el cliente'
+
+                messages.error(request, error_msg)
+
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f'Error de conexión con la API: {str(e)}')
+        except Exception as e:
+            messages.error(request, f'Error inesperado: {str(e)}')
+
+    return redirect('clientes')
+
 
 def facturas(request):
     try:
