@@ -9,7 +9,7 @@ import requests
 
 # Create your views here.
 def index(request):
-    return render(request, 'principal/index.html')
+    return redirect('configuracion')
 
 def configuracion(request):
     resultado = None
